@@ -1,6 +1,6 @@
 'use client';
 
-import { Calculator, FileText, Plane, Home, Car, HeartPulse } from 'lucide-react';
+import { Calculator, FileText, Plane, Home as HomeIcon, Car, HeartPulse } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
