@@ -20,13 +20,14 @@ export default function SalariiPage() {
   const [affiliateText, setAffiliateText] = useState('Obține card salariu gratuit');
 
   // Fetch affiliate data
-  useState(() => {
+  useEffect(() => {
     fetch('/api/settings')
       .then(res => res.json())
       .then(data => {
         setAffiliateLink(data.affiliate_salarii_link || '#');
         setAffiliateText(data.affiliate_salarii_text || 'Obține card salariu gratuit');
-      });
+      })
+      .catch(err => console.error('Error fetching settings:', err));
   }, []);
 
   const calculateSalary = () => {
