@@ -32,28 +32,45 @@ async function initializeSettings(db) {
   const existingSettings = await settings.findOne({ key: 'initialized' });
   
   if (!existingSettings) {
-    await settings.insertMany([
+    const initialSettings = [
       { key: 'initialized', value: true },
+      // Ad Slots - 4 total
       { key: 'ad_header', value: '<div><!-- AdSense Header --></div>' },
       { key: 'ad_sidebar', value: '<div><!-- AdSense Sidebar --></div>' },
-      { key: 'affiliate_salarii_text', value: 'Obține card salariu gratuit' },
-      { key: 'affiliate_salarii_link', value: '#' },
-      { key: 'affiliate_concediu_text', value: 'Asigurare medicală' },
-      { key: 'affiliate_concediu_link', value: '#' },
-      { key: 'affiliate_efactura_text', value: 'Software e-Factura' },
-      { key: 'affiliate_efactura_link', value: '#' },
-      { key: 'affiliate_impozit_text', value: 'Asigurare RCA' },
-      { key: 'affiliate_impozit_link', value: '#' },
-      { key: 'affiliate_zboruri_text', value: 'Compensații zbor' },
-      { key: 'affiliate_zboruri_link', value: '#' },
-      { key: 'affiliate_imobiliare_text', value: 'Credite ipotecare' },
-      { key: 'affiliate_imobiliare_link', value: '#' },
+      { key: 'ad_above_results', value: '<div><!-- AdSense Above Results --></div>' },
+      { key: 'ad_below_results', value: '<div><!-- AdSense Below Results --></div>' },
       // Tax values 2026
       { key: 'cas_rate', value: 25 },
       { key: 'cass_rate', value: 10 },
       { key: 'income_tax_rate', value: 10 },
       { key: 'deduction_personal', value: 510 },
-    ]);
+    ];
+    
+    // Affiliate slots - 3 per calculator
+    const calculators = ['salarii', 'concediu', 'efactura', 'impozit', 'zboruri', 'imobiliare'];
+    const defaultTexts = {
+      salarii: ['Obține card salariu gratuit', 'Credit rapid online', 'Consultanță fiscală'],
+      concediu: ['Asigurare medicală', 'Concedii medicale online', 'Clinici private'],
+      efactura: ['Software e-Factura', 'Contabilitate online', 'Soluții fiscale'],
+      impozit: ['Asigurare RCA', 'Leasing auto', 'Service auto profesional'],
+      zboruri: ['Compensații zbor', 'Asigurare călătorie', 'Bilete avion ieftine'],
+      imobiliare: ['Credite ipotecare', 'Agenție imobiliară', 'Evaluare proprietăți']
+    };
+    
+    calculators.forEach(calc => {
+      for (let i = 1; i <= 3; i++) {
+        initialSettings.push({ 
+          key: `affiliate_${calc}_text_${i}`, 
+          value: defaultTexts[calc][i-1] 
+        });
+        initialSettings.push({ 
+          key: `affiliate_${calc}_link_${i}`, 
+          value: '#' 
+        });
+      }
+    });
+    
+    await settings.insertMany(initialSettings);
   }
 
   // Initialize admin user
