@@ -10,8 +10,9 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { CarTaxCalculator, VEHICLE_TYPES, LOCATION_COEFFICIENTS } from '@/lib/car-tax-calculator';
+import { CarTaxCalculator, VEHICLE_TYPES, LOCATION_COEFFICIENTS, EURO_NORMS, FUEL_TYPES } from '@/lib/car-tax-calculator';
 import NavigationHeader from '@/components/NavigationHeader';
+import Footer from '@/components/Footer';
 
 export default function CarTaxCalculatorPage() {
   const params = useParams();
@@ -24,8 +25,11 @@ export default function CarTaxCalculatorPage() {
   // Inputs
   const [engineCC, setEngineCC] = useState('');
   const [vehicleType, setVehicleType] = useState('autoturism');
+  const [euroNorm, setEuroNorm] = useState('euro_6');
+  const [fuelType, setFuelType] = useState('benzina');
   const [location, setLocation] = useState('bucurești');
   const [registrationYear, setRegistrationYear] = useState(new Date().getFullYear().toString());
+  const [purchasePrice, setPurchasePrice] = useState('');
   
   // TCO inputs
   const [kmPerYear, setKmPerYear] = useState('15000');
@@ -63,14 +67,17 @@ export default function CarTaxCalculatorPage() {
     const calcResult = calculator.calculate({
       engineCC: parseInt(engineCC),
       vehicleType,
+      euroNorm,
+      fuelType,
       location,
       registrationYear: parseInt(registrationYear),
+      purchasePrice: purchasePrice ? parseFloat(purchasePrice) : 0,
     });
 
     setResult(calcResult);
 
     // Auto-calculate comparison
-    const comparison = calculator.compareLocations(parseInt(engineCC), vehicleType);
+    const comparison = calculator.compareLocations(parseInt(engineCC), euroNorm, vehicleType);
     setComparisonResult(comparison);
   };
 
@@ -84,6 +91,8 @@ export default function CarTaxCalculatorPage() {
     const tco = calculator.estimateTCO({
       engineCC: parseInt(engineCC),
       vehicleType,
+      euroNorm,
+      fuelType,
       location,
       registrationYear: parseInt(registrationYear),
       kmPerYear: parseInt(kmPerYear),
