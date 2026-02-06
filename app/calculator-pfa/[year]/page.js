@@ -652,6 +652,7 @@ export default function PFACalculatorPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
