@@ -166,7 +166,7 @@ Response: CSV file download
 ```bash
 MONGO_URL=mongodb+srv://ecalc_db_user:tQOflzPxU5TLOUB9@admin-ecalc.piefwf2.mongodb.net/?appName=admin-ecalc
 DB_NAME=ecalc_ro
-NEXT_PUBLIC_BASE_URL=https://financefox-3.preview.emergentagent.com
+NEXT_PUBLIC_BASE_URL=https://bug-hunter-ecalc.preview.emergentagent.com
 ADMIN_EMAIL=admin@ecalc.ro
 ADMIN_PASSWORD=Admin2026!
 ```
