@@ -1,6 +1,7 @@
 'use client';
 
-import { Calculator, FileText, Plane, Home as HomeIcon, Car, HeartPulse, Briefcase, Building2, TrendingUp, Scale, ArrowRight, Star } from 'lucide-react';
+import { useState } from 'react';
+import { Calculator, FileText, Plane, Home as HomeIcon, Car, HeartPulse, Briefcase, Building2, TrendingUp, Scale, ArrowRight, Star, Menu, X, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -82,12 +83,16 @@ const professionalCalculators = [
 ];
 
 export default function Home() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-      {/* Header */}
+      {/* Header cu meniu complet */}
       <header className="bg-slate-900/50 backdrop-blur border-b border-slate-700 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
+            {/* Logo */}
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                 <Calculator className="h-6 w-6 text-white" />
@@ -97,14 +102,116 @@ export default function Home() {
                 <p className="text-xs text-slate-400">Calculatoare Fiscale Profesionale</p>
               </div>
             </div>
-            <div className="flex gap-2">
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-1">
+              {/* Dropdown Calculatoare */}
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="text-slate-300 hover:text-white hover:bg-slate-800"
+                >
+                  <Calculator className="h-4 w-4 mr-1" />
+                  Calculatoare
+                  <ChevronDown className={`h-4 w-4 ml-1 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                </Button>
+
+                {dropdownOpen && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-10" 
+                      onClick={() => setDropdownOpen(false)}
+                    />
+                    <div className="absolute top-full left-0 mt-1 w-64 bg-slate-800 rounded-lg shadow-lg border border-slate-700 py-2 z-20">
+                      {professionalCalculators.map((calc) => {
+                        const Icon = calc.icon;
+                        return (
+                          <Link
+                            key={calc.href}
+                            href={calc.href}
+                            onClick={() => setDropdownOpen(false)}
+                            className="flex items-center px-4 py-2 hover:bg-slate-700 transition-colors text-slate-300 hover:text-white"
+                          >
+                            <Icon className="h-4 w-4 mr-3" />
+                            {calc.title.replace('Calculator ', '')}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Quick Links */}
+              <Link href={`/calculator-salarii-pro/${currentYear}`}>
+                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-slate-800">
+                  Salarii
+                </Button>
+              </Link>
+              <Link href={`/calculator-pfa/${currentYear}`}>
+                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-slate-800">
+                  PFA
+                </Button>
+              </Link>
+              <Link href={`/decision-maker/${currentYear}`}>
+                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-slate-800">
+                  Decision Maker
+                </Button>
+              </Link>
+
               <Link href="/admin-pro">
-                <Button variant="default" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button variant="default" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white ml-2">
                   Admin Pro
                 </Button>
               </Link>
-            </div>
+            </nav>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-2 rounded-lg hover:bg-slate-800 text-slate-300"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
           </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden py-4 border-t border-slate-700 mt-3">
+              <div className="space-y-1">
+                <div className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase">
+                  Calculatoare
+                </div>
+                {professionalCalculators.map((calc) => {
+                  const Icon = calc.icon;
+                  return (
+                    <Link
+                      key={calc.href}
+                      href={calc.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white"
+                    >
+                      <Icon className="h-5 w-5 mr-3" />
+                      {calc.title}
+                    </Link>
+                  );
+                })}
+                <div className="pt-4">
+                  <Link href="/admin-pro" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="default" className="w-full bg-blue-600 hover:bg-blue-700">
+                      Admin Dashboard
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
