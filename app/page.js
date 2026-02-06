@@ -99,7 +99,7 @@ export default function Home() {
             </div>
             <div className="flex gap-2">
               <Link href="/admin-pro">
-                <Button variant="outline" size="sm" className="border-slate-600 text-slate-300 hover:bg-slate-800">
+                <Button variant="default" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
                   Admin Pro
                 </Button>
               </Link>
