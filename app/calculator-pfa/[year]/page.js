@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { Calculator, TrendingUp, TrendingDown, Building2, User, ArrowLeftRight, Info, Download, Share2, ChevronRight } from 'lucide-react';
+import { Calculator, TrendingUp, TrendingDown, Building2, User, ArrowLeftRight, Info, Download, Share2, ChevronRight, RotateCcw } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { PFACalculator, NORME_VENIT_2026, getNormaVenit } from '@/lib/pfa-calculator';
 import { getBNRExchangeRate } from '@/lib/salary-calculator';
+import NavigationHeader from '@/components/NavigationHeader';
+import { saveToStorage, loadFromStorage, clearStorage } from '@/components/CalculatorLayout';
+import { printPDF, generatePFAReport } from '@/lib/pdf-export';
 
 export default function PFACalculatorPage() {
   const params = useParams();
