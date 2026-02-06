@@ -146,40 +146,143 @@ export default function FlightCompensationPage() {
           <Card className="mb-6">
             <CardHeader>
               <CardTitle>Detalii Zbor</CardTitle>
-              <CardDescription>Completează pentru a calcula compensația</CardDescription>
+              <CardDescription>Completează datele zborului pentru a calcula compensația</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Mod de introducere */}
+              <div className="flex gap-2 p-1 bg-slate-100 rounded-lg w-fit">
+                <Button
+                  variant={inputMode === 'manual' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setInputMode('manual')}
+                >
+                  Introducere Manuală
+                </Button>
+                <Button
+                  variant={inputMode === 'select' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setInputMode('select')}
+                >
+                  Selectare Aeroporturi
+                </Button>
+              </div>
+
+              {inputMode === 'manual' ? (
+                <>
+                  {/* Mod manual - introducere directă */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>Oraș/Aeroport Plecare</Label>
+                      <Input
+                        value={departureCity}
+                        onChange={(e) => setDepartureCity(e.target.value)}
+                        placeholder="Ex: București, OTP"
+                      />
+                    </div>
+                    <div>
+                      <Label>Oraș/Aeroport Sosire</Label>
+                      <Input
+                        value={arrivalCity}
+                        onChange={(e) => setArrivalCity(e.target.value)}
+                        placeholder="Ex: Londra, LHR"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label>Distanța Zborului (km)</Label>
+                    <Input
+                      type="number"
+                      value={manualDistance}
+                      onChange={(e) => setManualDistance(e.target.value)}
+                      placeholder="Introduceți distanța în kilometri"
+                    />
+                    <p className="text-xs text-slate-500 mt-1">
+                      Puteți găsi distanța pe Google Maps sau pe biletul de avion
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Mod selectare din listă */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>Aeroport Plecare</Label>
+                      <Select value={departureAirport} onValueChange={setDepartureAirport}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selectează aeroport" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {airports.map(airport => (
+                            <SelectItem key={airport.code} value={airport.code}>
+                              {airport.code} - {airport.name}, {airport.city}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <div>
+                      <Label>Aeroport Sosire</Label>
+                      <Select value={arrivalAirport} onValueChange={setArrivalAirport}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selectează aeroport" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {airports.map(airport => (
+                            <SelectItem key={airport.code} value={airport.code}>
+                              {airport.code} - {airport.name}, {airport.city}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Informații suplimentare */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <Label>Aeroport Plecare</Label>
-                  <Select value={departureAirport} onValueChange={setDepartureAirport}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {airports.map(airport => (
-                        <SelectItem key={airport.code} value={airport.code}>
-                          {airport.code} - {airport.name}, {airport.city}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label>Companie Aeriană</Label>
+                  <Input
+                    value={airlineName}
+                    onChange={(e) => setAirlineName(e.target.value)}
+                    placeholder="Ex: Wizz Air, Tarom, Blue Air"
+                  />
                 </div>
-                
                 <div>
-                  <Label>Aeroport Sosire</Label>
-                  <Select value={arrivalAirport} onValueChange={setArrivalAirport}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {airports.map(airport => (
-                        <SelectItem key={airport.code} value={airport.code}>
-                          {airport.code} - {airport.name}, {airport.city}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label>Data Zborului</Label>
+                  <Input
+                    type="date"
+                    value={flightDate}
+                    onChange={(e) => setFlightDate(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Tipul problemei */}
+              <div className="p-4 bg-slate-50 rounded-lg space-y-3">
+                <Label className="text-base font-semibold">Ce s-a întâmplat?</Label>
+                <div className="flex flex-wrap gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isCancelled}
+                      onChange={(e) => setIsCancelled(e.target.checked)}
+                      className="h-4 w-4 rounded"
+                    />
+                    <span>Zbor anulat</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isDeniedBoarding}
+                      onChange={(e) => setIsDeniedBoarding(e.target.checked)}
+                      className="h-4 w-4 rounded"
+                    />
+                    <span>Refuz îmbarcare (overbooking)</span>
+                  </label>
                 </div>
               </div>
 
@@ -193,6 +296,9 @@ export default function FlightCompensationPage() {
                     onChange={(e) => setDelayHours(e.target.value)}
                     placeholder="Ex: 3.5"
                   />
+                  <p className="text-xs text-slate-500 mt-1">
+                    Compensația se acordă pentru întârzieri de minim 3 ore
+                  </p>
                 </div>
                 
                 <div>
