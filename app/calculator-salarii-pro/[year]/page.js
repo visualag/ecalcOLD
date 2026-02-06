@@ -204,20 +204,13 @@ function SalaryCalculatorContent() {
       return;
     }
 
-    const data = generateSalarySlip(result, {
-      employeeName: 'Angajat',
-      month: 'Luna curentă',
-      year,
-      casRate: fiscalRules?.salary?.cas_rate || 25,
-      cassRate: fiscalRules?.salary?.cass_rate || 10,
-      taxRate: fiscalRules?.salary?.income_tax_rate || 10,
-      camRate: fiscalRules?.salary?.cam_rate || 2.25,
-    });
-
-    printPDF('Fluturaș de Salariu', data, {
-      subtitle: `Sector: ${sector === 'it' ? 'IT' : sector === 'construction' ? 'Construcții' : 'Standard'}`,
-      year,
-    });
+    try {
+      const filename = generateSalaryPDF(result, year);
+      toast.success(`PDF descărcat: ${filename}`);
+    } catch (error) {
+      toast.error('Eroare la generarea PDF-ului');
+      console.error(error);
+    }
   };
 
   const resetForm = () => {
