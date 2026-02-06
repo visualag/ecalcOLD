@@ -526,7 +526,8 @@ export default function DecisionMakerPage() {
                     </div>
                   </CardContent>
                 </Card>
-              </div>
+                </TabsContent>
+              </Tabs>
             ) : (
               <Card>
                 <CardContent className="py-12 text-center text-slate-500">
