@@ -13,7 +13,7 @@ import { toast } from 'sonner';
 import { MedicalLeaveCalculator, SICK_CODES, generateSalaryHistory } from '@/lib/medical-leave-calculator';
 import NavigationHeader from '@/components/NavigationHeader';
 import Footer from '@/components/Footer';
-import { printPDF, generateMedicalLeaveReport } from '@/lib/pdf-export';
+import { generateGenericPDF } from '@/lib/pdf-export';
 
 export default function MedicalLeaveCalculatorPage() {
   const params = useParams();
