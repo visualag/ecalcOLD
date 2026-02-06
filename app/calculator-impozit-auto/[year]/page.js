@@ -634,6 +634,7 @@ export default function CarTaxCalculatorPage() {
           </TabsContent>
         </Tabs>
       </div>
+      <Footer />
     </div>
   );
 }
