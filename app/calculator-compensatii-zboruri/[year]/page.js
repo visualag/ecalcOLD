@@ -59,20 +59,45 @@ export default function FlightCompensationPage() {
   };
 
   const calculate = () => {
-    if (!delayHours || parseFloat(delayHours) <= 0) {
-      toast.error('Introduceți durata întârzierii');
-      return;
-    }
-
     const calculator = new FlightCompensationCalculator(fiscalRules);
-    const distance = calculator.calculateDistance(departureAirport, arrivalAirport, AIRPORTS_DATABASE);
     
-    if (!distance) {
+    let distance;
+    let departureInfo, arrivalInfo;
+    
+    if (inputMode === 'manual') {
+      // Mod manual - utilizatorul introduce distanța direct
+      if (!manualDistance || parseFloat(manualDistance) <= 0) {
+        toast.error('Introduceți distanța zborului în km');
+        return;
+      }
+      distance = parseFloat(manualDistance);
+      departureInfo = { city: departureCity || 'Plecare', name: departureCity || 'Aeroport Plecare' };
+      arrivalInfo = { city: arrivalCity || 'Sosire', name: arrivalCity || 'Aeroport Sosire' };
+    } else {
+      // Mod selectare din listă
+      if (!departureAirport || !arrivalAirport) {
+        toast.error('Selectați ambele aeroporturi');
+        return;
+      }
+      distance = calculator.calculateDistance(departureAirport, arrivalAirport, AIRPORTS_DATABASE);
+      departureInfo = AIRPORTS_DATABASE[departureAirport];
+      arrivalInfo = AIRPORTS_DATABASE[arrivalAirport];
+    }
+    
+    if (!distance || distance <= 0) {
       toast.error('Nu s-a putut calcula distanța între aeroporturi');
       return;
     }
+    
+    // Verifică dacă avem întârziere sau anulare
+    const hours = parseFloat(delayHours) || 0;
+    if (!isCancelled && !isDeniedBoarding && hours < 2) {
+      toast.error('Compensația se acordă pentru întârzieri de minim 2 ore, anulări sau refuz îmbarcare');
+      return;
+    }
 
-    const compensation = calculator.calculateCompensation(distance, parseFloat(delayHours), true);
+    const isEligible = isCancelled || isDeniedBoarding || hours >= 3;
+    const compensation = calculator.calculateCompensation(distance, hours, isEligible);
     const exceptions = calculator.checkExceptions(delayReason);
     const rights = calculator.getPassengerRights();
     const checklist = calculator.getEligibilityChecklist();
@@ -83,8 +108,13 @@ export default function FlightCompensationPage() {
       exceptions,
       rights,
       checklist,
-      departure: AIRPORTS_DATABASE[departureAirport],
-      arrival: AIRPORTS_DATABASE[arrivalAirport],
+      departure: departureInfo,
+      arrival: arrivalInfo,
+      isCancelled,
+      isDeniedBoarding,
+      delayHours: hours,
+      flightDate,
+      airlineName,
     });
   };
 
