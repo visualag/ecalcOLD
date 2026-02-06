@@ -20,10 +20,25 @@ export default function FlightCompensationPage() {
   const [fiscalRules, setFiscalRules] = useState(null);
   const [loading, setLoading] = useState(true);
   
+  // Mod de introducere: 'select' pentru selectare din listă, 'manual' pentru introducere manuală
+  const [inputMode, setInputMode] = useState('manual');
+  
+  // Pentru selectare din listă
   const [departureAirport, setDepartureAirport] = useState('OTP');
-  const [arrivalAirport, setArrivalAirport] = useState('LHR');
+  const [arrivalAirport, setArrivalAirport] = useState('');
+  
+  // Pentru introducere manuală
+  const [departureCity, setDepartureCity] = useState('');
+  const [arrivalCity, setArrivalCity] = useState('');
+  const [manualDistance, setManualDistance] = useState('');
+  
   const [delayHours, setDelayHours] = useState('');
   const [delayReason, setDelayReason] = useState('');
+  const [isCancelled, setIsCancelled] = useState(false);
+  const [isDeniedBoarding, setIsDeniedBoarding] = useState(false);
+  const [flightDate, setFlightDate] = useState('');
+  const [airlineName, setAirlineName] = useState('');
+  
   const [result, setResult] = useState(null);
 
   useEffect(() => {
