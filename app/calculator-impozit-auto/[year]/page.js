@@ -151,7 +151,6 @@ export default function CarTaxCalculatorPage() {
           </div>
         </div>
 
-      <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="calculator">Calculator Impozit</TabsTrigger>
