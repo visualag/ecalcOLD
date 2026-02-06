@@ -203,7 +203,7 @@ export default function CarTaxCalculatorPage() {
                         <SelectContent>
                           {Object.entries(VEHICLE_TYPES).map(([key, info]) => (
                             <SelectItem key={key} value={key}>
-                              {info.name} {key === 'electric' && '⚡'} {key === 'hibrid' && '🔋'}
+                              {info.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -211,25 +211,103 @@ export default function CarTaxCalculatorPage() {
                     </div>
 
                     <div>
-                      <Label>Localitate</Label>
+                      <Label>Normă de Poluare (Euro)</Label>
+                      <Select value={euroNorm} onValueChange={setEuroNorm}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(EURO_NORMS).map(([key, info]) => (
+                            <SelectItem key={key} value={key}>
+                              {info.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {EURO_NORMS[euroNorm] && (
+                        <p className="text-xs text-slate-500 mt-1">
+                          {EURO_NORMS[euroNorm].description}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <Label>Tip Combustibil</Label>
+                      <Select value={fuelType} onValueChange={setFuelType}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(FUEL_TYPES).map(([key, info]) => (
+                            <SelectItem key={key} value={key}>
+                              {info.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label>Localitate Înmatriculare</Label>
                       <Select value={location} onValueChange={setLocation}>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="bucurești">București</SelectItem>
-                          <SelectItem value="cluj-napoca">Cluj-Napoca</SelectItem>
-                          <SelectItem value="timișoara">Timișoara</SelectItem>
-                          <SelectItem value="iași">Iași</SelectItem>
-                          <SelectItem value="constanța">Constanța</SelectItem>
-                          <SelectItem value="brașov">Brașov</SelectItem>
-                          <SelectItem value="craiova">Craiova</SelectItem>
-                          <SelectItem value="sibiu">Sibiu</SelectItem>
-                          <SelectItem value="oradea">Oradea</SelectItem>
-                          <SelectItem value="arad">Arad</SelectItem>
-                          <SelectItem value="municipiu">Alt municipiu</SelectItem>
-                          <SelectItem value="oraș mic">Oraș mic</SelectItem>
-                          <SelectItem value="rural">Rural/Comună</SelectItem>
+                          <SelectItem value="bucurești">București (+16%)</SelectItem>
+                          <SelectItem value="sector 1">București - Sector 1</SelectItem>
+                          <SelectItem value="sector 2">București - Sector 2</SelectItem>
+                          <SelectItem value="sector 3">București - Sector 3</SelectItem>
+                          <SelectItem value="sector 4">București - Sector 4</SelectItem>
+                          <SelectItem value="sector 5">București - Sector 5</SelectItem>
+                          <SelectItem value="sector 6">București - Sector 6</SelectItem>
+                          <SelectItem value="cluj-napoca">Cluj-Napoca (+15%)</SelectItem>
+                          <SelectItem value="timișoara">Timișoara (+12%)</SelectItem>
+                          <SelectItem value="iași">Iași (+10%)</SelectItem>
+                          <SelectItem value="constanța">Constanța (+12%)</SelectItem>
+                          <SelectItem value="brașov">Brașov (+12%)</SelectItem>
+                          <SelectItem value="sibiu">Sibiu (+10%)</SelectItem>
+                          <SelectItem value="oradea">Oradea (+8%)</SelectItem>
+                          <SelectItem value="arad">Arad (+5%)</SelectItem>
+                          <SelectItem value="craiova">Craiova (+8%)</SelectItem>
+                          <SelectItem value="galați">Galați (+5%)</SelectItem>
+                          <SelectItem value="ploiești">Ploiești (+8%)</SelectItem>
+                          <SelectItem value="brăila">Brăila (+5%)</SelectItem>
+                          <SelectItem value="pitești">Pitești (+6%)</SelectItem>
+                          <SelectItem value="bacău">Bacău (+5%)</SelectItem>
+                          <SelectItem value="târgu mureș">Târgu Mureș (+6%)</SelectItem>
+                          <SelectItem value="baia mare">Baia Mare (+4%)</SelectItem>
+                          <SelectItem value="buzău">Buzău (+4%)</SelectItem>
+                          <SelectItem value="botoșani">Botoșani (+2%)</SelectItem>
+                          <SelectItem value="satu mare">Satu Mare (+3%)</SelectItem>
+                          <SelectItem value="suceava">Suceava (+4%)</SelectItem>
+                          <SelectItem value="piatra neamț">Piatra Neamț (+3%)</SelectItem>
+                          <SelectItem value="drobeta-turnu severin">Drobeta-Turnu Severin (+2%)</SelectItem>
+                          <SelectItem value="focșani">Focșani (+3%)</SelectItem>
+                          <SelectItem value="râmnicu vâlcea">Râmnicu Vâlcea (+5%)</SelectItem>
+                          <SelectItem value="târgoviște">Târgoviște (+5%)</SelectItem>
+                          <SelectItem value="târgu jiu">Târgu Jiu (+4%)</SelectItem>
+                          <SelectItem value="bistrița">Bistrița (+4%)</SelectItem>
+                          <SelectItem value="reșița">Reșița (+2%)</SelectItem>
+                          <SelectItem value="slatina">Slatina (+3%)</SelectItem>
+                          <SelectItem value="călărași">Călărași (+2%)</SelectItem>
+                          <SelectItem value="giurgiu">Giurgiu (+2%)</SelectItem>
+                          <SelectItem value="alba iulia">Alba Iulia (+5%)</SelectItem>
+                          <SelectItem value="zalău">Zalău (+3%)</SelectItem>
+                          <SelectItem value="deva">Deva (+3%)</SelectItem>
+                          <SelectItem value="sfântu gheorghe">Sfântu Gheorghe (+4%)</SelectItem>
+                          <SelectItem value="hunedoara">Hunedoara (+2%)</SelectItem>
+                          <SelectItem value="mediaș">Mediaș (+2%)</SelectItem>
+                          <SelectItem value="petroșani">Petroșani (+1%)</SelectItem>
+                          <SelectItem value="turda">Turda (+3%)</SelectItem>
+                          <SelectItem value="câmpina">Câmpina (+3%)</SelectItem>
+                          <SelectItem value="reședință de județ">Alt Reședință de Județ (+8%)</SelectItem>
+                          <SelectItem value="municipiu mare">Municipiu Mare (+5%)</SelectItem>
+                          <SelectItem value="municipiu">Municipiu (+3%)</SelectItem>
+                          <SelectItem value="oraș">Oraș (0%)</SelectItem>
+                          <SelectItem value="oraș mic">Oraș Mic (-2%)</SelectItem>
+                          <SelectItem value="comună">Comună (-5%)</SelectItem>
+                          <SelectItem value="rural">Rural (-5%)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
