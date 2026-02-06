@@ -152,18 +152,7 @@ export default function MedicalLeaveCalculatorPage() {
             </Button>
           </div>
         </div>
-                Distribuie
-              </Button>
-              <Button variant="outline" size="sm">
-                <Download className="h-4 w-4 mr-1" />
-                PDF
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
 
-      <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="calculator">Calculator General</TabsTrigger>
