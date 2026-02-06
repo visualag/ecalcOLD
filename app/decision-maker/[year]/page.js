@@ -247,6 +247,11 @@ export default function DecisionMakerPage() {
       <NavigationHeader />
 
       <div className="container mx-auto px-4 py-8">
+        {/* Page Header */}
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold text-slate-900">Decision Maker {year}</h1>
+          <p className="text-sm text-slate-600">Comparație Salariu vs PFA vs SRL • Analiză Break-even</p>
+        </div>
         <div className="grid lg:grid-cols-4 gap-6">
           {/* Input */}
           <div>
