@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { RealEstateCalculator, PROPERTY_TYPES, CITIES_AVG_YIELD } from '@/lib/real-estate-calculator';
 import NavigationHeader from '@/components/NavigationHeader';
+import Footer from '@/components/Footer';
 
 export default function RealEstateCalculatorPage() {
   const params = useParams();
@@ -627,6 +628,7 @@ export default function RealEstateCalculatorPage() {
           </TabsContent>
         </Tabs>
       </div>
+      <Footer />
     </div>
   );
 }

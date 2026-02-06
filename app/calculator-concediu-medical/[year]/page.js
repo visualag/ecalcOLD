@@ -12,7 +12,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import { MedicalLeaveCalculator, SICK_CODES, generateSalaryHistory } from '@/lib/medical-leave-calculator';
 import NavigationHeader from '@/components/NavigationHeader';
-import { printPDF, generateMedicalLeaveReport } from '@/lib/pdf-export';
+import Footer from '@/components/Footer';
+import { generateGenericPDF } from '@/lib/pdf-export';
 
 export default function MedicalLeaveCalculatorPage() {
   const params = useParams();
@@ -110,11 +111,24 @@ export default function MedicalLeaveCalculatorPage() {
       toast.error('Calculați mai întâi indemnizația');
       return;
     }
-    const data = generateMedicalLeaveReport(result, { year });
-    printPDF('Raport Concediu Medical', data, {
-      subtitle: `Cod ${sickCode} - ${result.sickInfo.name}`,
-      year,
-    });
+    
+    try {
+      const data = {
+        'Cod concediu': `${sickCode} - ${result.sickInfo?.name || 'Boală obișnuită'}`,
+        'Zile concediu': result.days || 0,
+        'Salariu mediu brut': `${formatCurrency(result.averageSalary || 0)} RON`,
+        'Indemnizație brută': `${formatCurrency(result.grossIndemnity || 0)} RON`,
+        'Indemnizație netă': `${formatCurrency(result.netIndemnity || 0)} RON`,
+        'Plătitor primele 5 zile': 'Angajator',
+        'Plătitor restul zilelor': result.sickInfo?.paidBy || 'CNAS',
+      };
+      
+      generateGenericPDF(`Raport Concediu Medical ${year}`, data, year);
+      toast.success('PDF descărcat cu succes');
+    } catch (error) {
+      toast.error('Eroare la generarea PDF-ului');
+      console.error(error);
+    }
   };
 
   if (loading) {
@@ -573,6 +587,7 @@ export default function MedicalLeaveCalculatorPage() {
           </TabsContent>
         </Tabs>
       </div>
+      <Footer />
     </div>
   );
 }

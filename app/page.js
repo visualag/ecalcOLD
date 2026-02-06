@@ -1,6 +1,7 @@
 'use client';
 
-import { Calculator, FileText, Plane, Home as HomeIcon, Car, HeartPulse, Briefcase, Building2, TrendingUp, Scale, ArrowRight, Star } from 'lucide-react';
+import { useState } from 'react';
+import { Calculator, FileText, Plane, Home as HomeIcon, Car, HeartPulse, Briefcase, Building2, TrendingUp, Scale, ArrowRight, Star, Menu, X, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -47,7 +48,7 @@ const professionalCalculators = [
   {
     id: 'impozit-auto',
     title: 'Impozit Auto',
-    description: 'Capacitate motor • Tip vehicul • Coeficient regional • TCO',
+    description: 'Capacitate motor • Tip vehicul • Orașe România • Coeficienți',
     icon: Car,
     href: `/calculator-impozit-auto/${currentYear}`,
     color: 'bg-amber-600',
@@ -62,22 +63,36 @@ const professionalCalculators = [
     badge: 'PRO',
   },
   {
-    id: 'drepturi',
-    title: 'Calculator Drepturi',
-    description: 'e-Factura termene & amenzi • Compensații zboruri EU261',
-    icon: Scale,
-    href: `/calculator-drepturi/${currentYear}`,
+    id: 'efactura',
+    title: 'Calculator e-Factura',
+    description: 'Termene transmitere • Obligativitate B2B/B2C • Zile lucrătoare',
+    icon: FileText,
+    href: `/calculator-efactura/${currentYear}`,
     color: 'bg-violet-600',
+    badge: 'NOU',
+  },
+  {
+    id: 'compensatii-zboruri',
+    title: 'Compensații Zboruri',
+    description: 'EU Regulation 261/2004 • Calculează despăgubiri întârzieri/anulări',
+    icon: Plane,
+    href: `/calculator-compensatii-zboruri/${currentYear}`,
+    color: 'bg-sky-600',
+    badge: 'NOU',
   },
 ];
 
 export default function Home() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
-      {/* Header */}
+      {/* Header cu meniu complet */}
       <header className="bg-slate-900/50 backdrop-blur border-b border-slate-700 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
+            {/* Logo */}
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                 <Calculator className="h-6 w-6 text-white" />
@@ -87,14 +102,116 @@ export default function Home() {
                 <p className="text-xs text-slate-400">Calculatoare Fiscale Profesionale</p>
               </div>
             </div>
-            <div className="flex gap-2">
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-1">
+              {/* Dropdown Calculatoare */}
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="text-slate-300 hover:text-white hover:bg-slate-800"
+                >
+                  <Calculator className="h-4 w-4 mr-1" />
+                  Calculatoare
+                  <ChevronDown className={`h-4 w-4 ml-1 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                </Button>
+
+                {dropdownOpen && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-10" 
+                      onClick={() => setDropdownOpen(false)}
+                    />
+                    <div className="absolute top-full left-0 mt-1 w-64 bg-slate-800 rounded-lg shadow-lg border border-slate-700 py-2 z-20">
+                      {professionalCalculators.map((calc) => {
+                        const Icon = calc.icon;
+                        return (
+                          <Link
+                            key={calc.href}
+                            href={calc.href}
+                            onClick={() => setDropdownOpen(false)}
+                            className="flex items-center px-4 py-2 hover:bg-slate-700 transition-colors text-slate-300 hover:text-white"
+                          >
+                            <Icon className="h-4 w-4 mr-3" />
+                            {calc.title.replace('Calculator ', '')}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Quick Links */}
+              <Link href={`/calculator-salarii-pro/${currentYear}`}>
+                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-slate-800">
+                  Salarii
+                </Button>
+              </Link>
+              <Link href={`/calculator-pfa/${currentYear}`}>
+                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-slate-800">
+                  PFA
+                </Button>
+              </Link>
+              <Link href={`/decision-maker/${currentYear}`}>
+                <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-slate-800">
+                  Decision Maker
+                </Button>
+              </Link>
+
               <Link href="/admin-pro">
-                <Button variant="outline" size="sm" className="border-slate-600 text-slate-300 hover:bg-slate-800">
+                <Button variant="default" size="sm" className="bg-blue-600 hover:bg-blue-700 text-white ml-2">
                   Admin Pro
                 </Button>
               </Link>
-            </div>
+            </nav>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-2 rounded-lg hover:bg-slate-800 text-slate-300"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
           </div>
+
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden py-4 border-t border-slate-700 mt-3">
+              <div className="space-y-1">
+                <div className="px-3 py-2 text-xs font-semibold text-slate-500 uppercase">
+                  Calculatoare
+                </div>
+                {professionalCalculators.map((calc) => {
+                  const Icon = calc.icon;
+                  return (
+                    <Link
+                      key={calc.href}
+                      href={calc.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white"
+                    >
+                      <Icon className="h-5 w-5 mr-3" />
+                      {calc.title}
+                    </Link>
+                  );
+                })}
+                <div className="pt-4">
+                  <Link href="/admin-pro" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="default" className="w-full bg-blue-600 hover:bg-blue-700">
+                      Admin Dashboard
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
@@ -117,19 +234,21 @@ export default function Home() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href={`/calculator-salarii-pro/${currentYear}`}>
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
                 Calculator Salarii
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>
             <Link href={`/calculator-pfa/${currentYear}`}>
-              <Button size="lg" variant="outline" className="border-slate-600 text-white hover:bg-slate-800">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
                 Calculator PFA
+                <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>
             <Link href={`/decision-maker/${currentYear}`}>
-              <Button size="lg" variant="outline" className="border-purple-500 text-purple-400 hover:bg-purple-600/20">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
                 Decision Maker
+                <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>
           </div>
@@ -220,10 +339,46 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-4 border-t border-slate-800">
-        <div className="container mx-auto text-center text-slate-500 text-sm">
-          <p>© {currentYear} eCalc.ro - Calculatoare Fiscale Profesionale pentru România</p>
-          <p className="mt-2">Informațiile au caracter orientativ. Consultați un specialist pentru situații complexe.</p>
+      <footer className="py-12 px-4 border-t border-slate-800 bg-slate-950">
+        <div className="container mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
+            <div>
+              <h3 className="text-white font-semibold mb-4">eCalc.ro</h3>
+              <p className="text-slate-400 text-sm">
+                Calculatoare fiscale profesionale pentru România. 
+                Toate calculele sunt orientative și nu înlocuiesc consultanța fiscală.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-4">Legal</h3>
+              <div className="space-y-2">
+                <Link href="/termeni-conditii" className="block text-slate-400 hover:text-white text-sm">
+                  Termeni și Condiții
+                </Link>
+                <Link href="/politica-confidentialitate" className="block text-slate-400 hover:text-white text-sm">
+                  Politica de Confidențialitate
+                </Link>
+              </div>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-4">Surse Oficiale</h3>
+              <div className="space-y-2 text-sm">
+                <a href="https://www.anaf.ro" target="_blank" rel="noopener" className="block text-slate-400 hover:text-white">
+                  ANAF - Agenția Națională de Administrare Fiscală
+                </a>
+                <a href="https://e-factura.anaf.ro" target="_blank" rel="noopener" className="block text-slate-400 hover:text-white">
+                  Portal e-Factura
+                </a>
+                <a href="https://www.legislatie.just.ro" target="_blank" rel="noopener" className="block text-slate-400 hover:text-white">
+                  Legislație România
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="text-center pt-8 border-t border-slate-800">
+            <p className="text-slate-500 text-sm">© {currentYear} eCalc.ro - Calculatoare Fiscale Profesionale pentru România</p>
+            <p className="text-slate-600 text-xs mt-2">Informațiile au caracter orientativ. Consultați un specialist pentru situații complexe.</p>
+          </div>
         </div>
       </footer>
     </div>

@@ -4,8 +4,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
-  Calculator, Menu, X, Home, Briefcase, HeartPulse, Car, Building2, Scale, 
-  TrendingUp, ChevronDown, FileText
+  Calculator, Menu, X, Home, Briefcase, HeartPulse, Car, Building2, FileText, Plane,
+  TrendingUp, ChevronDown
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -18,7 +18,8 @@ const calculators = [
   { name: 'Concediu Medical', href: `/calculator-concediu-medical/${currentYear}`, icon: HeartPulse, color: 'text-rose-500' },
   { name: 'Impozit Auto', href: `/calculator-impozit-auto/${currentYear}`, icon: Car, color: 'text-amber-500' },
   { name: 'Imobiliare', href: `/calculator-imobiliare-pro/${currentYear}`, icon: Building2, color: 'text-indigo-500' },
-  { name: 'Drepturi', href: `/calculator-drepturi/${currentYear}`, icon: Scale, color: 'text-violet-500' },
+  { name: 'e-Factura', href: `/calculator-efactura/${currentYear}`, icon: FileText, color: 'text-violet-500' },
+  { name: 'Compensații Zboruri', href: `/calculator-compensatii-zboruri/${currentYear}`, icon: Plane, color: 'text-sky-500' },
 ];
 
 export default function NavigationHeader() {

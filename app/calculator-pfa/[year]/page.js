@@ -13,8 +13,9 @@ import { toast } from 'sonner';
 import { PFACalculator, NORME_VENIT_2026, getNormaVenit } from '@/lib/pfa-calculator';
 import { getBNRExchangeRate } from '@/lib/salary-calculator';
 import NavigationHeader from '@/components/NavigationHeader';
+import Footer from '@/components/Footer';
 import { saveToStorage, loadFromStorage, clearStorage } from '@/components/CalculatorLayout';
-import { printPDF, generatePFAReport } from '@/lib/pdf-export';
+import { generateGenericPDF } from '@/lib/pdf-export';
 
 export default function PFACalculatorPage() {
   const params = useParams();
@@ -113,11 +114,24 @@ export default function PFACalculatorPage() {
       toast.error('Calculați mai întâi comparația');
       return;
     }
-    const data = generatePFAReport(comparisonResult, { year });
-    printPDF('Raport Comparație PFA', data, {
-      subtitle: `Sistem Real vs. Normă de Venit`,
-      year,
-    });
+    
+    try {
+      const data = {
+        'Venit brut anual': `${formatCurrency(comparisonResult.yearlyIncome)} RON`,
+        'Sistem Real - Net anual': `${formatCurrency(comparisonResult.real?.netYearly || 0)} RON`,
+        'Sistem Real - Rate efectivă': `${comparisonResult.real?.effectiveTaxRate?.toFixed(1) || 0}%`,
+        'Normă de Venit - Net anual': `${formatCurrency(comparisonResult.norm?.netYearly || 0)} RON`,
+        'Normă de Venit - Rate efectivă': `${comparisonResult.norm?.effectiveTaxRate?.toFixed(1) || 0}%`,
+        'Sistem recomandat': comparisonResult.recommendation || 'N/A',
+        'Economie anuală': `${formatCurrency(Math.abs(comparisonResult.difference || 0))} RON`,
+      };
+      
+      generateGenericPDF(`Raport Comparație PFA ${year}`, data, year);
+      toast.success('PDF descărcat cu succes');
+    } catch (error) {
+      toast.error('Eroare la generarea PDF-ului');
+      console.error(error);
+    }
   };
 
   const resetForm = () => {
@@ -651,6 +665,7 @@ export default function PFACalculatorPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

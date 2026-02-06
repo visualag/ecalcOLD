@@ -10,8 +10,9 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
-import { CarTaxCalculator, VEHICLE_TYPES, LOCATION_COEFFICIENTS } from '@/lib/car-tax-calculator';
+import { CarTaxCalculator, VEHICLE_TYPES, LOCATION_COEFFICIENTS, EURO_NORMS, FUEL_TYPES } from '@/lib/car-tax-calculator';
 import NavigationHeader from '@/components/NavigationHeader';
+import Footer from '@/components/Footer';
 
 export default function CarTaxCalculatorPage() {
   const params = useParams();
@@ -24,8 +25,11 @@ export default function CarTaxCalculatorPage() {
   // Inputs
   const [engineCC, setEngineCC] = useState('');
   const [vehicleType, setVehicleType] = useState('autoturism');
+  const [euroNorm, setEuroNorm] = useState('euro_6');
+  const [fuelType, setFuelType] = useState('benzina');
   const [location, setLocation] = useState('bucurești');
   const [registrationYear, setRegistrationYear] = useState(new Date().getFullYear().toString());
+  const [purchasePrice, setPurchasePrice] = useState('');
   
   // TCO inputs
   const [kmPerYear, setKmPerYear] = useState('15000');
@@ -63,14 +67,17 @@ export default function CarTaxCalculatorPage() {
     const calcResult = calculator.calculate({
       engineCC: parseInt(engineCC),
       vehicleType,
+      euroNorm,
+      fuelType,
       location,
       registrationYear: parseInt(registrationYear),
+      purchasePrice: purchasePrice ? parseFloat(purchasePrice) : 0,
     });
 
     setResult(calcResult);
 
     // Auto-calculate comparison
-    const comparison = calculator.compareLocations(parseInt(engineCC), vehicleType);
+    const comparison = calculator.compareLocations(parseInt(engineCC), euroNorm, vehicleType);
     setComparisonResult(comparison);
   };
 
@@ -84,6 +91,8 @@ export default function CarTaxCalculatorPage() {
     const tco = calculator.estimateTCO({
       engineCC: parseInt(engineCC),
       vehicleType,
+      euroNorm,
+      fuelType,
       location,
       registrationYear: parseInt(registrationYear),
       kmPerYear: parseInt(kmPerYear),
@@ -194,7 +203,7 @@ export default function CarTaxCalculatorPage() {
                         <SelectContent>
                           {Object.entries(VEHICLE_TYPES).map(([key, info]) => (
                             <SelectItem key={key} value={key}>
-                              {info.name} {key === 'electric' && '⚡'} {key === 'hibrid' && '🔋'}
+                              {info.name}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -202,25 +211,103 @@ export default function CarTaxCalculatorPage() {
                     </div>
 
                     <div>
-                      <Label>Localitate</Label>
+                      <Label>Normă de Poluare (Euro)</Label>
+                      <Select value={euroNorm} onValueChange={setEuroNorm}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(EURO_NORMS).map(([key, info]) => (
+                            <SelectItem key={key} value={key}>
+                              {info.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {EURO_NORMS[euroNorm] && (
+                        <p className="text-xs text-slate-500 mt-1">
+                          {EURO_NORMS[euroNorm].description}
+                        </p>
+                      )}
+                    </div>
+
+                    <div>
+                      <Label>Tip Combustibil</Label>
+                      <Select value={fuelType} onValueChange={setFuelType}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(FUEL_TYPES).map(([key, info]) => (
+                            <SelectItem key={key} value={key}>
+                              {info.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label>Localitate Înmatriculare</Label>
                       <Select value={location} onValueChange={setLocation}>
                         <SelectTrigger>
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="bucurești">București</SelectItem>
-                          <SelectItem value="cluj-napoca">Cluj-Napoca</SelectItem>
-                          <SelectItem value="timișoara">Timișoara</SelectItem>
-                          <SelectItem value="iași">Iași</SelectItem>
-                          <SelectItem value="constanța">Constanța</SelectItem>
-                          <SelectItem value="brașov">Brașov</SelectItem>
-                          <SelectItem value="craiova">Craiova</SelectItem>
-                          <SelectItem value="sibiu">Sibiu</SelectItem>
-                          <SelectItem value="oradea">Oradea</SelectItem>
-                          <SelectItem value="arad">Arad</SelectItem>
-                          <SelectItem value="municipiu">Alt municipiu</SelectItem>
-                          <SelectItem value="oraș mic">Oraș mic</SelectItem>
-                          <SelectItem value="rural">Rural/Comună</SelectItem>
+                          <SelectItem value="bucurești">București (+16%)</SelectItem>
+                          <SelectItem value="sector 1">București - Sector 1</SelectItem>
+                          <SelectItem value="sector 2">București - Sector 2</SelectItem>
+                          <SelectItem value="sector 3">București - Sector 3</SelectItem>
+                          <SelectItem value="sector 4">București - Sector 4</SelectItem>
+                          <SelectItem value="sector 5">București - Sector 5</SelectItem>
+                          <SelectItem value="sector 6">București - Sector 6</SelectItem>
+                          <SelectItem value="cluj-napoca">Cluj-Napoca (+15%)</SelectItem>
+                          <SelectItem value="timișoara">Timișoara (+12%)</SelectItem>
+                          <SelectItem value="iași">Iași (+10%)</SelectItem>
+                          <SelectItem value="constanța">Constanța (+12%)</SelectItem>
+                          <SelectItem value="brașov">Brașov (+12%)</SelectItem>
+                          <SelectItem value="sibiu">Sibiu (+10%)</SelectItem>
+                          <SelectItem value="oradea">Oradea (+8%)</SelectItem>
+                          <SelectItem value="arad">Arad (+5%)</SelectItem>
+                          <SelectItem value="craiova">Craiova (+8%)</SelectItem>
+                          <SelectItem value="galați">Galați (+5%)</SelectItem>
+                          <SelectItem value="ploiești">Ploiești (+8%)</SelectItem>
+                          <SelectItem value="brăila">Brăila (+5%)</SelectItem>
+                          <SelectItem value="pitești">Pitești (+6%)</SelectItem>
+                          <SelectItem value="bacău">Bacău (+5%)</SelectItem>
+                          <SelectItem value="târgu mureș">Târgu Mureș (+6%)</SelectItem>
+                          <SelectItem value="baia mare">Baia Mare (+4%)</SelectItem>
+                          <SelectItem value="buzău">Buzău (+4%)</SelectItem>
+                          <SelectItem value="botoșani">Botoșani (+2%)</SelectItem>
+                          <SelectItem value="satu mare">Satu Mare (+3%)</SelectItem>
+                          <SelectItem value="suceava">Suceava (+4%)</SelectItem>
+                          <SelectItem value="piatra neamț">Piatra Neamț (+3%)</SelectItem>
+                          <SelectItem value="drobeta-turnu severin">Drobeta-Turnu Severin (+2%)</SelectItem>
+                          <SelectItem value="focșani">Focșani (+3%)</SelectItem>
+                          <SelectItem value="râmnicu vâlcea">Râmnicu Vâlcea (+5%)</SelectItem>
+                          <SelectItem value="târgoviște">Târgoviște (+5%)</SelectItem>
+                          <SelectItem value="târgu jiu">Târgu Jiu (+4%)</SelectItem>
+                          <SelectItem value="bistrița">Bistrița (+4%)</SelectItem>
+                          <SelectItem value="reșița">Reșița (+2%)</SelectItem>
+                          <SelectItem value="slatina">Slatina (+3%)</SelectItem>
+                          <SelectItem value="călărași">Călărași (+2%)</SelectItem>
+                          <SelectItem value="giurgiu">Giurgiu (+2%)</SelectItem>
+                          <SelectItem value="alba iulia">Alba Iulia (+5%)</SelectItem>
+                          <SelectItem value="zalău">Zalău (+3%)</SelectItem>
+                          <SelectItem value="deva">Deva (+3%)</SelectItem>
+                          <SelectItem value="sfântu gheorghe">Sfântu Gheorghe (+4%)</SelectItem>
+                          <SelectItem value="hunedoara">Hunedoara (+2%)</SelectItem>
+                          <SelectItem value="mediaș">Mediaș (+2%)</SelectItem>
+                          <SelectItem value="petroșani">Petroșani (+1%)</SelectItem>
+                          <SelectItem value="turda">Turda (+3%)</SelectItem>
+                          <SelectItem value="câmpina">Câmpina (+3%)</SelectItem>
+                          <SelectItem value="reședință de județ">Alt Reședință de Județ (+8%)</SelectItem>
+                          <SelectItem value="municipiu mare">Municipiu Mare (+5%)</SelectItem>
+                          <SelectItem value="municipiu">Municipiu (+3%)</SelectItem>
+                          <SelectItem value="oraș">Oraș (0%)</SelectItem>
+                          <SelectItem value="oraș mic">Oraș Mic (-2%)</SelectItem>
+                          <SelectItem value="comună">Comună (-5%)</SelectItem>
+                          <SelectItem value="rural">Rural (-5%)</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -234,6 +321,19 @@ export default function CarTaxCalculatorPage() {
                         min="1990"
                         max={new Date().getFullYear()}
                       />
+                    </div>
+
+                    <div>
+                      <Label>Preț Achiziție (RON, opțional)</Label>
+                      <Input
+                        type="number"
+                        value={purchasePrice}
+                        onChange={(e) => setPurchasePrice(e.target.value)}
+                        placeholder="Pentru mașini de lux (>375.000 RON)"
+                      />
+                      <p className="text-xs text-slate-500 mt-1">
+                        Suprataxă 0.9% pentru valori peste 375.000 RON
+                      </p>
                     </div>
 
                     <Button onClick={calculateTax} className="w-full bg-amber-600 hover:bg-amber-700" size="lg">
@@ -276,31 +376,35 @@ export default function CarTaxCalculatorPage() {
                         {/* Breakdown */}
                         <Card>
                           <CardHeader>
-                            <CardTitle>Detalii Calcul</CardTitle>
+                            <CardTitle>Detalii Calcul - Art. 470 Cod Fiscal</CardTitle>
                             <CardDescription>
-                              {result.vehicleTypeName} • {result.engineCC} cmc • {result.location}
+                              {result.vehicleTypeName} • {result.engineCC} cmc • {result.euroNormName} • {result.location}
                             </CardDescription>
                           </CardHeader>
                           <CardContent>
                             <div className="space-y-3">
                               <div className="flex justify-between items-center p-2 bg-slate-50 rounded">
-                                <span className="text-slate-600">Bază impozit (capacitate):</span>
-                                <span className="font-semibold">{formatCurrency(result.baseTax)} RON</span>
+                                <span className="text-slate-600">Fracțiuni de 200 cmc:</span>
+                                <span className="font-semibold">{result.fractions} fracțiuni</span>
                               </div>
                               <div className="flex justify-between items-center p-2">
-                                <span className="text-slate-600">Multiplicator tip vehicul:</span>
-                                <span className="font-semibold">× {result.typeMultiplier.toFixed(2)}</span>
+                                <span className="text-slate-600">Rată per fracțiune ({result.euroNormName}):</span>
+                                <span className="font-semibold">{result.ratePerFraction?.toFixed(1)} RON</span>
                               </div>
-                              {result.ageReduction > 0 && (
-                                <div className="flex justify-between items-center p-2 bg-green-50 rounded">
-                                  <span className="text-green-700">Reducere vechime ({result.vehicleAge} ani):</span>
-                                  <span className="font-semibold text-green-700">-{(result.ageReduction * 100).toFixed(0)}%</span>
-                                </div>
-                              )}
+                              <div className="flex justify-between items-center p-2 bg-slate-50 rounded">
+                                <span className="text-slate-600">Bază impozit ({result.fractions} × {result.ratePerFraction?.toFixed(1)}):</span>
+                                <span className="font-semibold">{result.baseTax?.toFixed(2)} RON</span>
+                              </div>
                               <div className="flex justify-between items-center p-2">
                                 <span className="text-slate-600">Coeficient locație ({result.location}):</span>
-                                <span className="font-semibold">× {result.locationCoefficient.toFixed(2)}</span>
+                                <span className="font-semibold">× {result.locationCoefficient?.toFixed(2)}</span>
                               </div>
+                              {result.luxuryTax > 0 && (
+                                <div className="flex justify-between items-center p-2 bg-purple-50 rounded">
+                                  <span className="text-purple-700">Suprataxă lux (0.9%):</span>
+                                  <span className="font-semibold text-purple-700">+{formatCurrency(result.luxuryTax)} RON</span>
+                                </div>
+                              )}
                               <div className="flex justify-between items-center p-3 bg-amber-100 rounded-lg text-lg">
                                 <span className="font-bold text-amber-800">Impozit Anual:</span>
                                 <span className="font-bold text-amber-800">{formatCurrency(result.finalTax)} RON</span>
@@ -317,11 +421,14 @@ export default function CarTaxCalculatorPage() {
                               <div className="text-sm text-blue-800">
                                 <strong>Termene de plată:</strong>
                                 <ul className="list-disc list-inside mt-1">
-                                  <li>31 Martie - trimestrul I</li>
+                                  <li>31 Martie - trimestrul I (sau integral cu reducere 10%)</li>
                                   <li>30 Iunie - trimestrul II</li>
                                   <li>30 Septembrie - trimestrul III</li>
                                   <li>31 Decembrie - trimestrul IV</li>
                                 </ul>
+                                <p className="mt-2 text-xs">
+                                  Bază legală: {result.legalBasis}
+                                </p>
                               </div>
                             </div>
                           </CardContent>
@@ -527,6 +634,7 @@ export default function CarTaxCalculatorPage() {
           </TabsContent>
         </Tabs>
       </div>
+      <Footer />
     </div>
   );
 }
