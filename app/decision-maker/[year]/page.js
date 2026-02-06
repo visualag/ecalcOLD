@@ -291,101 +291,144 @@ export default function DecisionMakerPage() {
           {/* Results */}
           <div className="lg:col-span-3">
             {results ? (
-              <div className="space-y-6">
-                {/* Comparison Table */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Comparație Completă {year}</CardTitle>
-                    <CardDescription>Bani rămași în mână după TOATE taxele</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="overflow-x-auto">
-                      <table className="w-full">
-                        <thead>
-                          <tr className="border-b">
-                            <th className="text-left p-3">Formă Organizare</th>
-                            <th className="text-right p-3">Venit Brut</th>
-                            <th className="text-right p-3">Taxe Totale</th>
-                            <th className="text-right p-3">NET Rămas</th>
-                            <th className="text-right p-3">% din Brut</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {[results.salary, results.pfaReal, results.pfaNorm, results.srl].map((r, idx) => (
-                            <tr 
-                              key={idx} 
-                              className={`border-b ${r.type === results.best.type ? 'bg-green-50' : ''}`}
-                            >
-                              <td className="p-3 font-medium">
-                                {r.type}
-                                {r.type === results.best.type && (
-                                  <CheckCircle className="inline h-4 w-4 ml-2 text-green-600" />
-                                )}
-                              </td>
-                              <td className="text-right p-3">{r.gross.toFixed(2)} RON</td>
-                              <td className="text-right p-3 text-red-600">-{r.taxes.toFixed(2)} RON</td>
-                              <td className="text-right p-3 font-bold text-green-600">{r.net.toFixed(2)} RON</td>
-                              <td className="text-right p-3">{((r.net / r.gross) * 100).toFixed(1)}%</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </CardContent>
-                </Card>
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="comparison">Comparație</TabsTrigger>
+                  <TabsTrigger value="breakeven">Break-even Analysis</TabsTrigger>
+                  <TabsTrigger value="history">Istoric 2025 vs 2026</TabsTrigger>
+                </TabsList>
 
-                {/* Best Option */}
-                <Card className="bg-green-50 border-green-200">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <CheckCircle className="h-6 w-6 text-green-600" />
-                      Recomandare Optimă
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-lg">
-                      Pentru venitul de <strong>{parseFloat(annualIncome).toFixed(2)} RON/an</strong>,
-                      forma optimă este <strong>{results.best.type}</strong>.
-                    </p>
-                    <p className="text-sm text-slate-600 mt-2">
-                      Economisești <strong>{(results.best.net - Math.min(...[results.salary, results.pfaReal, results.pfaNorm, results.srl].map(r => r.net))).toFixed(2)} RON</strong> față de cea mai dezavantajoasă opțiune.
-                    </p>
-                  </CardContent>
-                </Card>
-
-                {/* Break-even Analysis */}
-                {breakEven && (
+                {/* COMPARISON TAB */}
+                <TabsContent value="comparison" className="space-y-6">
+                  {/* Comparison Table */}
                   <Card>
                     <CardHeader>
-                      <CardTitle>Analiza Break-even</CardTitle>
-                      <CardDescription>La ce nivel de venit se schimbă avantajul</CardDescription>
+                      <CardTitle>Comparație Completă {year}</CardTitle>
+                      <CardDescription>Bani rămași în mână după TOATE taxele</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-3">
-                      <div className="flex items-start gap-2">
-                        <Info className="h-5 w-5 text-blue-600 mt-0.5" />
-                        <div className="text-sm">
-                          {results.pfaReal.net > results.salary.net ? (
-                            <p><strong>PFA este mai avantajos decât Salariu</strong> pentru acest nivel de venit.</p>
-                          ) : (
-                            <p><strong>Salariul este mai avantajos decât PFA</strong> pentru acest nivel de venit.</p>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-2">
-                        <Info className="h-5 w-5 text-blue-600 mt-0.5" />
-                        <div className="text-sm">
-                          {results.srl.net > results.pfaReal.net ? (
-                            <p><strong>SRL este mai avantajos decât PFA</strong> la acest nivel de venit și cheltuieli.</p>
-                          ) : (
-                            <p><strong>PFA este mai avantajos decât SRL</strong> la acest nivel de venit și cheltuieli.</p>
-                          )}
-                        </div>
+                    <CardContent>
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead>
+                            <tr className="border-b">
+                              <th className="text-left p-3">Formă Organizare</th>
+                              <th className="text-right p-3">Venit Brut</th>
+                              <th className="text-right p-3">Taxe Totale</th>
+                              <th className="text-right p-3">NET Rămas</th>
+                              <th className="text-right p-3">% din Brut</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {[results.salary, results.pfaReal, results.pfaNorm, results.srl].map((r, idx) => (
+                              <tr 
+                                key={idx} 
+                                className={`border-b ${r.type === results.best.type ? 'bg-green-50' : ''}`}
+                              >
+                                <td className="p-3 font-medium">
+                                  {r.type}
+                                  {r.type === results.best.type && (
+                                    <CheckCircle className="inline h-4 w-4 ml-2 text-green-600" />
+                                  )}
+                                </td>
+                                <td className="text-right p-3">{r.gross.toFixed(2)} RON</td>
+                                <td className="text-right p-3 text-red-600">-{r.taxes.toFixed(2)} RON</td>
+                                <td className="text-right p-3 font-bold text-green-600">{r.net.toFixed(2)} RON</td>
+                                <td className="text-right p-3">{((r.net / r.gross) * 100).toFixed(1)}%</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
                     </CardContent>
                   </Card>
-                )}
 
-                {/* Inter-annual Comparison */}
+                  {/* Best Option */}
+                  <Card className="bg-green-50 border-green-200">
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <CheckCircle className="h-6 w-6 text-green-600" />
+                        Recomandare Optimă
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-lg">
+                        Pentru venitul de <strong>{parseFloat(annualIncome).toFixed(2)} RON/an</strong>,
+                        forma optimă este <strong>{results.best.type}</strong>.
+                      </p>
+                      <p className="text-sm text-slate-600 mt-2">
+                        Economisești <strong>{(results.best.net - Math.min(...[results.salary, results.pfaReal, results.pfaNorm, results.srl].map(r => r.net))).toFixed(2)} RON</strong> față de cea mai dezavantajoasă opțiune.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                {/* BREAK-EVEN TAB */}
+                <TabsContent value="breakeven" className="space-y-6">
+                  {breakEvenData ? (
+                    <>
+                      <Card className="border-2 border-purple-200 bg-purple-50">
+                        <CardHeader>
+                          <CardTitle className="flex items-center gap-2">
+                            <Target className="h-6 w-6 text-purple-600" />
+                            Break-even Analysis - Praguri de Tranziție
+                          </CardTitle>
+                          <CardDescription>
+                            Identifică exact la ce nivel de venit devine avantajoasă trecerea la o altă formă juridică
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="space-y-4">
+                            {breakEvenData.transitions.map((transition, idx) => (
+                              <div key={idx} className="flex items-center gap-4 p-4 bg-white rounded-lg border">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="font-semibold text-slate-700">{transition.from}</span>
+                                    <ArrowRight className="h-4 w-4 text-slate-400" />
+                                    <span className="font-semibold text-blue-700">{transition.to}</span>
+                                  </div>
+                                  <p className="text-sm text-slate-600">{transition.message}</p>
+                                </div>
+                                {transition.breakEvenIncome && (
+                                  <div className="text-right">
+                                    <div className="text-2xl font-bold text-purple-600">
+                                      {new Intl.NumberFormat('ro-RO').format(transition.breakEvenIncome)} RON
+                                    </div>
+                                    <div className="text-xs text-slate-500">prag anual</div>
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div className="flex items-start gap-3">
+                              <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                              <div className="text-sm text-blue-900">
+                                <p className="font-semibold mb-2">Cum să folosești această analiză:</p>
+                                <ul className="list-disc list-inside space-y-1">
+                                  <li>Identifică pragul de venit la care forma actuală devine mai puțin eficientă</li>
+                                  <li>Planifică tranziția la momentul optim pentru minimizarea taxelor</li>
+                                  <li>Ține cont de costurile de tranziție (contabil, notarial, timp)</li>
+                                  <li>Rămâi flexibil - pragurile se pot schimba anual cu legislația</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </>
+                  ) : (
+                    <Card>
+                      <CardContent className="py-12 text-center">
+                        <Target className="h-12 w-12 mx-auto mb-4 text-slate-400" />
+                        <p className="text-slate-600">Calculați mai întâi pentru a vedea analiza break-even</p>
+                      </CardContent>
+                    </Card>
+                  )}
+                </TabsContent>
+
+                {/* HISTORY TAB */}
+                <TabsContent value="history" className="space-y-6">
                 {comparison2025 && (
                   <Card>
                     <CardHeader>
