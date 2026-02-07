@@ -23,7 +23,9 @@ function SalaryCalculatorContent() {
   const [fiscalRules, setFiscalRules] = useState(null);
   const [loading, setLoading] = useState(true);
   
-  // Inputs
+  // Inputs - EXTENDED pentru Calculator Avansat
+  const [selectedYear, setSelectedYear] = useState(year);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [calculationType, setCalculationType] = useState('brut-net');
   const [inputValue, setInputValue] = useState('');
   const [sector, setSector] = useState('standard');
@@ -31,10 +33,18 @@ function SalaryCalculatorContent() {
   const [children, setChildren] = useState('0');
   const [mealVouchers, setMealVouchers] = useState('0');
   const [voucherDays, setVoucherDays] = useState('22');
+  const [mealVoucherValue, setMealVoucherValue] = useState('40');
   const [isPartTime, setIsPartTime] = useState(false);
   const [isStudentOrPensioner, setIsStudentOrPensioner] = useState(false);
   const [currency, setCurrency] = useState('RON');
   const [exchangeRate, setExchangeRate] = useState(4.98);
+  
+  // NEW - Opțiuni Avansate
+  const [isBasicFunction, setIsBasicFunction] = useState(true); // Funcție de bază
+  const [age, setAge] = useState(30); // Pentru scutire < 26 ani
+  const [isYouthExempt, setIsYouthExempt] = useState(false); // < 26 ani
+  const [isTaxExempt, setIsTaxExempt] = useState(false); // Handicap/Scutit complet
+  const [showAdvanced, setShowAdvanced] = useState(false); // Toggle calcul avansat
   
   // Results
   const [result, setResult] = useState(null);
