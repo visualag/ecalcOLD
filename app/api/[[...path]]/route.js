@@ -132,12 +132,17 @@ async function initializeFiscalRules(db) {
         meal_voucher_max: 40,
         tax_exemption_threshold: 10000,
         personal_deduction_base: 510,
+        personal_deduction_range: 2000,
         child_deduction: 100,
         it_tax_exempt: true,
         it_threshold: 10000,
         construction_cas_rate: 21.25,
         construction_tax_exempt: true,
         construction_cass_exempt: false,
+      },
+      exchange_rate: {
+        eur: 5.0923,
+        auto_update: true,
       },
       pfa: {
         minimum_salary: 3700,
