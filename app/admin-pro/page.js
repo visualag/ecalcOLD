@@ -458,6 +458,51 @@ export default function AdminDashboard() {
                         </div>
                       </div>
 
+                      {/* Exchange Rate */}
+                      <div className="border-t pt-4">
+                        <h3 className="font-semibold mb-4">Curs Valutar EUR/RON</h3>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div>
+                            <Label>Curs EUR (Manual Override)</Label>
+                            <Input
+                              type="number"
+                              step="0.0001"
+                              value={fiscalRules.exchange_rate?.eur || 5.0923}
+                              onChange={(e) => {
+                                setFiscalRules({
+                                  ...fiscalRules,
+                                  exchange_rate: {
+                                    ...fiscalRules.exchange_rate,
+                                    eur: parseFloat(e.target.value),
+                                  },
+                                });
+                              }}
+                            />
+                            <p className="text-xs text-slate-500 mt-1">1 EUR = X RON (pentru conversii și simulări)</p>
+                          </div>
+                          <div>
+                            <Label className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={fiscalRules.exchange_rate?.auto_update !== false}
+                                onChange={(e) => {
+                                  setFiscalRules({
+                                    ...fiscalRules,
+                                    exchange_rate: {
+                                      ...fiscalRules.exchange_rate,
+                                      auto_update: e.target.checked,
+                                    },
+                                  });
+                                }}
+                                className="h-4 w-4"
+                              />
+                              Actualizare Automată BNR
+                            </Label>
+                            <p className="text-xs text-slate-500 mt-1">Preia curs zilnic de la BNR dacă activat</p>
+                          </div>
+                        </div>
+                      </div>
+
                       <Button onClick={updateFiscalRules} className="w-full" size="lg">
                         <Save className="h-4 w-4 mr-2" />
                         Salvează Reguli Salarii {selectedYear}
