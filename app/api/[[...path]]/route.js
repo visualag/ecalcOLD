@@ -506,11 +506,14 @@ async function handleFiscalRulesPut(year, request, db) {
     const body = await request.json();
     const fiscalRules = db.collection('fiscal_rules');
     
+    // Remove _id from body to avoid MongoDB immutable field error
+    const { _id, ...updateData } = body;
+    
     await fiscalRules.updateOne(
       { year: parseInt(year) },
       { 
         $set: { 
-          ...body,
+          ...updateData,
           year: parseInt(year),
           updatedAt: new Date() 
         } 
