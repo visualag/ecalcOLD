@@ -304,6 +304,16 @@ export default function AdminDashboard() {
                             <p className="text-xs text-slate-500 mt-1">Contribuție asigurări sociale (standard: 25%)</p>
                           </div>
                           <div>
+                            <Label>Pilon 2 - Pensie Privată (%)</Label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={fiscalRules.salary.pilon2_rate || 4.75}
+                              onChange={(e) => updateFiscalField('salary', 'pilon2_rate', parseFloat(e.target.value))}
+                            />
+                            <p className="text-xs text-slate-500 mt-1">Procent din CAS către pensie privată (4.75%)</p>
+                          </div>
+                          <div>
                             <Label>CASS - Sănătate (%)</Label>
                             <Input
                               type="number"
