@@ -74,14 +74,23 @@ export default function AdminDashboard() {
   const updateFiscalRules = async () => {
     try {
       setLoading(true);
-      await fetch(`/api/fiscal-rules/${selectedYear}`, {
+      const response = await fetch(`/api/fiscal-rules/${selectedYear}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(fiscalRules),
       });
-      toast.success(`Reguli fiscale ${selectedYear} actualizate cu succes!`);
-      loadData();
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        toast.success(`Reguli fiscale ${selectedYear} actualizate cu succes!`);
+        // Reload data to confirm persistence
+        await loadData();
+      } else {
+        toast.error(result.error || 'Eroare la actualizarea regulilor fiscale');
+      }
     } catch (error) {
+      console.error('Error updating fiscal rules:', error);
       toast.error('Eroare la actualizarea regulilor fiscale');
     } finally {
       setLoading(false);
