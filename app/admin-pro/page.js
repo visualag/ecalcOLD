@@ -219,10 +219,14 @@ export default function AdminDashboard() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+          <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
             <TabsTrigger value="fiscal">
               <Calculator className="h-4 w-4 mr-2" />
               Reguli Fiscale
+            </TabsTrigger>
+            <TabsTrigger value="holidays">
+              <Calendar className="h-4 w-4 mr-2" />
+              Sărbători
             </TabsTrigger>
             <TabsTrigger value="ads">
               <Megaphone className="h-4 w-4 mr-2" />
