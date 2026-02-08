@@ -93,7 +93,7 @@ cp /tmp/ecalc/app/api/[[..path]]/route.js /app/app/api/[[...path]]/route.js
 # Am creat fișierul .env cu toate variabilele necesare
 MONGO_URL=mongodb+srv://ecalc_db_user:tQOflzPxU5TLOUB9@admin-ecalc.piefwf2.mongodb.net/?appName=admin-ecalc
 DB_NAME=ecalc_ro
-NEXT_PUBLIC_BASE_URL=https://deduction-engine.preview.emergentagent.com
+NEXT_PUBLIC_BASE_URL=https://dynamic-payroll-calc.preview.emergentagent.com
 ADMIN_EMAIL=admin@ecalc.ro
 ADMIN_PASSWORD=Admin2026!
 ```

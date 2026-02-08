@@ -2,7 +2,7 @@
 
 ## 📱 Accesare Aplicație
 
-**URL Principal:** https://deduction-engine.preview.emergentagent.com
+**URL Principal:** https://dynamic-payroll-calc.preview.emergentagent.com
 
 ### Pagini Disponibile:
 - **Homepage:** `/` - Lista cu toate calculatoarele
@@ -243,7 +243,7 @@ ADMIN_PASSWORD=Admin2026!
 - Connection string în `.env`
 
 **Deployment:**
-- URL: https://deduction-engine.preview.emergentagent.com
+- URL: https://dynamic-payroll-calc.preview.emergentagent.com
 - Supervisor: `sudo supervisorctl restart nextjs`
 
 ---

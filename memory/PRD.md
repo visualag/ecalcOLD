@@ -422,7 +422,7 @@ CORS_ORIGINS=*
 **Contact:**
 - Admin: admin@ecalc.ro
 - Database: MongoDB Atlas (ecalc_ro)
-- Live URL: https://deduction-engine.preview.emergentagent.com
+- Live URL: https://dynamic-payroll-calc.preview.emergentagent.com
 
 ---
 
