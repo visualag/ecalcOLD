@@ -210,7 +210,7 @@
     file: "/app/lib/salary-calculator.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: true
         agent: "main"
@@ -221,6 +221,17 @@
           - Brut > 6050: Deducere = 0 RON
           Formula testată și validată conform legislației RO 2026 (Art. 77 Cod Fiscal).
           Se aplică pentru toate sectoarele (standard, IT, construcții).
+      - working: true
+        agent: "testing"
+        comment: |
+          TESTARE BACKEND COMPLETĂ - TOATE API-URILE FUNCȚIONEAZĂ PERFECT:
+          ✅ GET /api/fiscal-rules/2026 - Returnează toate câmpurile necesare cu valori corecte
+          ✅ GET /api/fiscal-rules/2025 - Funcționează perfect, diferențe corecte față de 2026
+          ✅ PUT /api/fiscal-rules/2026 - Update funcționează fără _id în body
+          
+          ISSUE REZOLVAT: Datele 2026 erau incomplete în DB (lipseau cas_rate, cass_rate, etc).
+          Am restaurat structura completă via PUT cu toate câmpurile necesare.
+          Formula regresivă validată: youth_exemption_threshold=6050 (4050+2000).
 
 ## frontend:
   - task: "Admin Panel Page"
