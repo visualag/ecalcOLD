@@ -18,6 +18,8 @@ export default function AdminDashboard() {
   const [fiscalRules, setFiscalRules] = useState(null);
   const [settings, setSettings] = useState({});
   const [leads, setLeads] = useState([]);
+  const [holidays, setHolidays] = useState([]);
+  const [newHoliday, setNewHoliday] = useState({ date: '', name: '', type: 'legal' });
   const [activeTab, setActiveTab] = useState('fiscal');
   const [activeModule, setActiveModule] = useState('salary');
   const [loading, setLoading] = useState(false);
