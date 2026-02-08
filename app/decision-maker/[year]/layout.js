@@ -1,13 +1,15 @@
 const currentYear = new Date().getFullYear();
 
 export async function generateMetadata({ params }) {
-  const year = params.year || currentYear;
+  // Luam orasul/statiunea din URL si il facem cu prima litera mare
+  const city = params.city.charAt(0).toUpperCase() + params.city.slice(1);
 
   return {
-    title: `PFA vs SRL ${year} - Calculator Optimizare Fiscală`,
-    description: `Cea mai completă simulare PFA vs SRL în ${year}. Află care formă de organizare îți lasă mai mulți bani în buzunar după plata tuturor taxelor.`,
+    title: `Vremea în ${city} ${currentYear} - Prognoză Meteo și Temperatură`,
+    description: `Află starea vremii în ${city} pentru ${currentYear}. Prognoza detaliată pe ore și zile, temperatura acum și avertizări meteo pentru ${city}.`,
+    keywords: `vremea ${city}, prognoza meteo ${city}, starea vremii ${city} ${currentYear}, temperatura ${city}`,
     alternates: { 
-      canonical: `/decision-maker/${year}` 
+      canonical: `/vreme/${params.city}` 
     }
   };
 }
