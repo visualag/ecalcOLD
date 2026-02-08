@@ -320,6 +320,61 @@ function SalaryCalculatorContent() {
     }
   };
 
+  // ============================================
+  // EXPORT - PRINT PDF (BROWSER)
+  // ============================================
+  const handlePrint = () => {
+    if (!result) {
+      toast.error('Calculați mai întâi salariul pentru a printa');
+      return;
+    }
+    window.print();
+    toast.success('Pagina de printare deschisă');
+  };
+
+  // ============================================
+  // EXPORT - EMAIL REZULTATE
+  // ============================================
+  const handleEmail = () => {
+    if (!result) {
+      toast.error('Calculați mai întâi salariul');
+      return;
+    }
+
+    const subject = encodeURIComponent(`Calculator Salariu ${selectedYear} - Rezultate`);
+    const totalTaxes = result.cas + result.cass + result.incomeTax;
+    
+    let bodyText = `CALCULATOR SALARIU ${selectedYear} - REZULTATE\n`;
+    bodyText += `====================================\n\n`;
+    bodyText += `📊 SALARIU BRUT: ${result.gross.toFixed(2)} RON\n`;
+    bodyText += `💰 SALARIU NET: ${result.net.toFixed(2)} RON\n`;
+    bodyText += `📉 TOTAL TAXE ANGAJAT: ${totalTaxes.toFixed(2)} RON\n\n`;
+    bodyText += `DETALII TAXE:\n`;
+    bodyText += `- CAS (Pensii): ${result.cas.toFixed(2)} RON\n`;
+    bodyText += `- CASS (Sănătate): ${result.cass.toFixed(2)} RON\n`;
+    bodyText += `- Impozit pe Venit: ${result.incomeTax.toFixed(2)} RON\n\n`;
+    
+    if (result.personalDeduction > 0) {
+      bodyText += `✅ Deducere personală: ${result.personalDeduction.toFixed(2)} RON\n`;
+    }
+    if (result.childDeduction > 0) {
+      bodyText += `✅ Deducere copii: ${result.childDeduction.toFixed(2)} RON\n`;
+    }
+    if (result.taxExemptReason) {
+      bodyText += `✅ ${result.taxExemptReason}\n`;
+    }
+    
+    bodyText += `\n💼 COST TOTAL ANGAJATOR: ${result.totalCost.toFixed(2)} RON\n`;
+    bodyText += `\n====================================\n`;
+    bodyText += `Calculat pe eCalc.ro - ${new Date().toLocaleDateString('ro-RO')}\n`;
+    bodyText += `Link: ${window.location.href}`;
+    
+    const body = encodeURIComponent(bodyText);
+    
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    toast.success('Clientul de email a fost deschis');
+  };
+
   const resetForm = () => {
     setInputValue('');
     setCalculationType('brut-net');
