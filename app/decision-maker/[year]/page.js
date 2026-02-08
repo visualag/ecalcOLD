@@ -14,8 +14,8 @@ import { BreakEvenCalculator } from '@/lib/break-even-calculator';
 import NavigationHeader from '@/components/NavigationHeader';
 import Footer from '@/components/Footer';
 
-export default function DecisionMakerPage() {
-  const params = useParams();
+export default function DecisionMakerPage({ params }) {
+  const unwrappedParams = useParams();
   const year = parseInt(params?.year) || 2026;
   
   const [fiscalRules, setFiscalRules] = useState(null);
@@ -39,6 +39,8 @@ export default function DecisionMakerPage() {
         fetch(`/api/fiscal-rules/${year}`).then(r => r.json()),
         fetch('/api/fiscal-rules/2025').then(r => r.json()),
       ]);
+      console.log("Reguli 2026:", current);
+      console.log("Reguli 2025:", prev);
       setFiscalRules(current);
       setFiscalRules2025(prev);
       setLoading(false);
