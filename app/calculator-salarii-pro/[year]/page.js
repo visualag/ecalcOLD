@@ -749,8 +749,20 @@ function SalaryCalculatorContent() {
                           </div>
                           {result.personalDeduction > 0 && (
                             <div className="flex justify-between text-green-600">
-                              <span>Deducere personală:</span>
+                              <span>Deducere personală (bază):</span>
                               <span>{result.personalDeduction.toFixed(2)} RON</span>
+                            </div>
+                          )}
+                          {result.childDeduction > 0 && (
+                            <div className="flex justify-between text-green-600">
+                              <span>Deducere copii ({parseInt(children) || 0} x {fiscalRules?.salary?.child_deduction || 100} RON):</span>
+                              <span>{result.childDeduction.toFixed(2)} RON</span>
+                            </div>
+                          )}
+                          {result.dependentDeduction > 0 && (
+                            <div className="flex justify-between text-green-600">
+                              <span>Deducere persoane întreținere:</span>
+                              <span>{result.dependentDeduction.toFixed(2)} RON</span>
                             </div>
                           )}
                           <div className="flex justify-between text-red-600">
