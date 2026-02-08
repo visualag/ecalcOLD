@@ -200,11 +200,11 @@ try {
             ))}
           </div>
         </div>
-{/* --- AICI AICI AICI PUNEM FABRICA --- */}
+{/* FABRICA DE LINK-URI DINAMICE - GOOGLE MAGNET */}
         {nearbyPlaces.length > 0 && (
           <div className="mt-12 p-8 bg-blue-50/50 rounded-[2.5rem] border border-blue-100 shadow-inner text-center">
             <h3 className="text-xs font-black text-blue-400 uppercase tracking-widest mb-6">
-              Vremea în alte localități din {weather.region}
+              Vremea în alte localități din {weather?.region || 'zonă'}
             </h3>
             <div className="flex flex-wrap justify-center gap-3">
               {nearbyPlaces.map((place) => (
@@ -221,9 +221,9 @@ try {
         )}
         {/* --- SFARSIT FABRICA --- */}
 
-</div> // Asta inchide <div className="space-y-6">
-    )} // Asta inchide {weather && (
-  
+          </div> // Inchide space-y-6
+        )} {/* Inchide weather && */}
+        
       </main>
 
       <Footer />
