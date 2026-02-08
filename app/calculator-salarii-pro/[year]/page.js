@@ -158,10 +158,15 @@ function SalaryCalculatorContent() {
     const valueInRON = currency === 'EUR' ? value * exchangeRate : value;
     
     // Opțiuni complete cu toate facilitățile avansate
+    // IMPORTANT: Verificăm explicit dacă mealVouchers este setat (chiar și 0)
+    const mealVouchersValue = mealVouchers !== '' && mealVouchers !== null && mealVouchers !== undefined 
+      ? parseFloat(mealVouchers) 
+      : 0;
+    
     const options = {
       dependents: parseInt(dependents) || 0,
       children: parseInt(children) || 0,
-      mealVouchers: parseFloat(mealVouchers) || parseFloat(mealVoucherValue) || 0,
+      mealVouchers: mealVouchersValue,
       voucherDays: parseInt(voucherDays) || 22,
       isStudentOrPensioner,
       // OPȚIUNI AVANSATE
