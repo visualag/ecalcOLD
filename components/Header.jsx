@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Calculator } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Calculator, CloudSun } from 'lucide-react';
 
 export default function Header() {
   return (
@@ -21,6 +22,12 @@ export default function Header() {
           <div className="flex gap-2">
             <Link href="/">
               <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Link href="/vreme">
+  <Button size="sm" variant="outline" className="border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">
+    <CloudSun className="h-4 w-4 mr-2 text-blue-400" />
+    Vremea
+  </Button>
+</Link>
                 Calculatoare
               </Button>
             </Link>
