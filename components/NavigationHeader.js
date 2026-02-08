@@ -122,7 +122,16 @@ export default function NavigationHeader() {
                 Decision Maker
               </Button>
             </Link>
-
+<Link href="/vreme">
+  <Button 
+    variant="ghost" 
+    size="sm"
+    className={pathname === '/vreme' ? 'bg-blue-50 text-blue-700' : 'text-slate-600'}
+  >
+    <CloudSun className="h-4 w-4 mr-1 text-blue-500" />
+    Vremea
+  </Button>
+</Link>
             <Link href="/admin-pro">
               <Button variant="outline" size="sm">
                 Admin
