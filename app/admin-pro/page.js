@@ -118,6 +118,56 @@ export default function AdminDashboard() {
     }
   };
 
+  // ============================================
+  // FUNCȚII PENTRU ADMINISTRARE SĂRBĂTORI
+  // ============================================
+  const addHoliday = () => {
+    if (!newHoliday.date || !newHoliday.name) {
+      toast.error('Completați data și numele sărbătorii');
+      return;
+    }
+    
+    // Verifică dacă data există deja
+    if (holidays.some(h => h.date === newHoliday.date)) {
+      toast.error('Această dată există deja în listă');
+      return;
+    }
+    
+    const updatedHolidays = [...holidays, { ...newHoliday }].sort((a, b) => 
+      new Date(a.date) - new Date(b.date)
+    );
+    
+    setHolidays(updatedHolidays);
+    setNewHoliday({ date: '', name: '', type: 'legal' });
+    toast.success('Sărbătoare adăugată (nu uitați să salvați!)');
+  };
+
+  const removeHoliday = (dateToRemove) => {
+    setHolidays(holidays.filter(h => h.date !== dateToRemove));
+    toast.success('Sărbătoare ștearsă (nu uitați să salvați!)');
+  };
+
+  const saveHolidays = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/holidays/${selectedYear}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ holidays }),
+      });
+      
+      if (response.ok) {
+        toast.success(`Sărbătorile pentru ${selectedYear} au fost salvate!`);
+      } else {
+        toast.error('Eroare la salvarea sărbătorilor');
+      }
+    } catch (error) {
+      toast.error('Eroare la salvarea sărbătorilor');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const exportLeads = () => {
     window.open('/api/leads/export', '_blank');
   };
