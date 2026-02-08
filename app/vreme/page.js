@@ -6,8 +6,10 @@ import { CloudSun, Wind, Droplets, Sun } from 'lucide-react';
 
 const currentYear = new Date().getFullYear();
 const ORASE_PRINCIPALE = [
-  'Bucuresti', 'Cluj-Napoca', 'Timisoara', 'Iasi', 'Constanta', 
-  'Craiova', 'Brasov', 'Galati', 'Ploiesti', 'Oradea', 'Braila', 'Arad'
+  'Alba Iulia', 'Alexandria', 'Arad', 'Bacau', 'Baia Mare', 'Bistrita', 'Botosani', 'Braila', 'Brasov', 'Bucuresti',
+  'Buzau', 'Calarasi', 'Cluj-Napoca', 'Constanta', 'Craiova', 'Deva', 'Drobeta-Turnu Severin', 'Focsani', 'Galati', 'Giurgiu',
+  'Iasi', 'Miercurea Ciuc', 'Oradea', 'Piatra Neamt', 'Pitesti', 'Ploiesti', 'Ramnicu Valcea', 'Resita', 'Satu Mare', 'Sfantu Gheorghe',
+  'Sibiu', 'Slatina', 'Slobozia', 'Suceava', 'Targoviste', 'Targu Jiu', 'Targu Mures', 'Timisoara', 'Tulcea', 'Turda', 'Vaslui', 'Zalau'
 ];
 
 export default function WeatherPage() {
