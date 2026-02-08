@@ -10,51 +10,51 @@ export default function Footer() {
       <div className="container mx-auto">
         <div className="grid md:grid-cols-4 gap-6 text-sm mb-6">
           <div>
-            <h3 className="font-semibold text-slate-900 mb-3">eCalc.ro</h3>
-            <p className="text-slate-500 text-xs">
+            <h3 className="font-bold text-slate-900 mb-3">eCalc.ro</h3>
+            <p className="text-slate-600 text-xs leading-relaxed">
               Calculatoare fiscale profesionale pentru România. 
               Informațiile sunt orientative și nu înlocuiesc consultanța fiscală.
             </p>
           </div>
-          <div>
-            <h3 className="font-semibold text-slate-900 mb-3">Calculatoare</h3>
+          <nav aria-label="Linkuri utile calculatoare">
+            <h3 className="font-bold text-slate-900 mb-3">Calculatoare</h3>
             <div className="space-y-1.5">
-              <Link href={`/calculator-salarii-pro/${currentYear}`} className="block text-slate-500 hover:text-blue-600 text-xs">
+              <Link href={`/calculator-salarii-pro/${currentYear}`} className="block text-slate-600 hover:text-blue-700 text-xs font-medium">
                 Calculator Salarii
               </Link>
-              <Link href={`/calculator-pfa/${currentYear}`} className="block text-slate-500 hover:text-blue-600 text-xs">
+              <Link href={`/calculator-pfa/${currentYear}`} className="block text-slate-600 hover:text-blue-700 text-xs font-medium">
                 Calculator PFA
               </Link>
-              <Link href={`/decision-maker/${currentYear}`} className="block text-slate-500 hover:text-blue-600 text-xs">
+              <Link href={`/decision-maker/${currentYear}`} className="block text-slate-600 hover:text-blue-700 text-xs font-medium">
                 Decision Maker
               </Link>
             </div>
-          </div>
-          <div>
-            <h3 className="font-semibold text-slate-900 mb-3">Legal</h3>
+          </nav>
+          <nav aria-label="Linkuri legale">
+            <h3 className="font-bold text-slate-900 mb-3">Legal</h3>
             <div className="space-y-1.5">
-              <Link href="/termeni-conditii" className="block text-slate-500 hover:text-blue-600 text-xs">
+              <Link href="/termeni-conditii" className="block text-slate-600 hover:text-blue-700 text-xs font-medium">
                 Termeni și Condiții
               </Link>
-              <Link href="/politica-confidentialitate" className="block text-slate-500 hover:text-blue-600 text-xs">
+              <Link href="/politica-confidentialitate" className="block text-slate-600 hover:text-blue-700 text-xs font-medium">
                 Politica de Confidențialitate
               </Link>
             </div>
-          </div>
-          <div>
-            <h3 className="font-semibold text-slate-900 mb-3">Surse Oficiale</h3>
+          </nav>
+          <nav aria-label="Surse externe oficiale">
+            <h3 className="font-bold text-slate-900 mb-3">Surse Oficiale</h3>
             <div className="space-y-1.5">
-              <a href="https://www.anaf.ro" target="_blank" rel="noopener noreferrer" className="block text-slate-500 hover:text-blue-600 text-xs">
+              <a href="https://www.anaf.ro" target="_blank" rel="noopener noreferrer" title="Vizitează site-ul oficial ANAF" className="block text-slate-600 hover:text-blue-700 text-xs font-medium">
                 ANAF
               </a>
-              <a href="https://e-factura.anaf.ro" target="_blank" rel="noopener noreferrer" className="block text-slate-500 hover:text-blue-600 text-xs">
+              <a href="https://e-factura.anaf.ro" target="_blank" rel="noopener noreferrer" title="Acces portal e-Factura" className="block text-slate-600 hover:text-blue-700 text-xs font-medium">
                 Portal e-Factura
               </a>
             </div>
-          </div>
+          </nav>
         </div>
         <div className="text-center pt-4 border-t border-slate-100">
-          <p className="text-slate-400 text-xs">© {currentYear} eCalc.ro - Toate drepturile rezervate</p>
+          <p className="text-slate-600 text-xs font-medium">© {currentYear} eCalc.ro - Toate drepturile rezervate</p>
         </div>
       </div>
     </footer>
