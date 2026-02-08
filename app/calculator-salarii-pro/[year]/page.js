@@ -564,16 +564,9 @@ function SalaryCalculatorContent() {
   };
 
   // ============================================
-  // EXPORT - PRINT PDF (BROWSER)
+  // EXPORT - PRINT PDF (DOAR REZULTATUL - A4/A5)
   // ============================================
-  const handlePrint = () => {
-    if (!result) {
-      toast.error('Calculați mai întâi salariul pentru a printa');
-      return;
-    }
-    window.print();
-    toast.success('Pagina de printare deschisă');
-  };
+  // Funcția handlePrintResult este definită mai sus după loadHolidays
 
   // ============================================
   // EXPORT - EMAIL REZULTATE
