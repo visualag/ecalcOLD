@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
   Calculator, Menu, X, Home, Briefcase, HeartPulse, Car, Building2, FileText, Plane,
-  TrendingUp, ChevronDown
+  TrendingUp, ChevronDown, CloudSun
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -187,7 +187,16 @@ export default function NavigationHeader() {
                   </Link>
                 );
               })}
-
+<Link
+  href="/vreme"
+  onClick={() => setMobileMenuOpen(false)}
+  className={`flex items-center px-3 py-2 rounded-lg mb-2 ${
+    pathname === '/vreme' ? 'bg-blue-50 text-blue-700' : 'text-slate-700 hover:bg-slate-50'
+  }`}
+>
+  <CloudSun className="h-5 w-5 mr-3 text-blue-500" />
+  Vremea
+</Link>
               <div className="pt-4">
                 <Link href="/admin-pro" onClick={() => setMobileMenuOpen(false)}>
                   <Button variant="outline" className="w-full">
