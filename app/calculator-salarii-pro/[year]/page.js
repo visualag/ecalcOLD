@@ -136,12 +136,16 @@ function SalaryCalculatorContent() {
     const value = parseFloat(inputValue);
     const valueInRON = currency === 'EUR' ? value * exchangeRate : value;
     
+    // Opțiuni complete cu toate facilitățile avansate
     const options = {
       dependents: parseInt(dependents) || 0,
       children: parseInt(children) || 0,
-      mealVouchers: parseFloat(mealVouchers) || 0,
+      mealVouchers: parseFloat(mealVouchers) || parseFloat(mealVoucherValue) || 0,
       voucherDays: parseInt(voucherDays) || 22,
       isStudentOrPensioner,
+      // OPȚIUNI AVANSATE
+      isBasicFunction, // Pentru deducere personală (doar cu funcție de bază)
+      age: isYouthExempt ? 25 : 30, // Sub 26 = scutire IV
     };
 
     let calcResult;
@@ -168,12 +172,96 @@ function SalaryCalculatorContent() {
       calcResult = calculator.calculateCostToNet(valueInRON, sector, options);
     }
 
+    // ============================================
+    // PRIORITATE SCUTIRI - RECALCULARE IMPOZIT
+    // ============================================
+    
+    // 1. PRIORITATE #1: Scutire TOTALĂ Handicap (isTaxExempt = true)
+    if (isTaxExempt && fiscalRules?.salary?.disability_tax_exempt !== false) {
+      // Forțăm impozit = 0 și recalculăm NET-ul
+      const previousTax = calcResult.incomeTax;
+      calcResult.incomeTax = 0;
+      calcResult.net = calcResult.net + previousTax;
+      calcResult.taxExemptReason = 'Scutire IV - Persoană cu handicap';
+      calcResult.exemptAmount = calcResult.gross;
+    }
+    // 2. PRIORITATE #2: Scutire Tineri < 26 ani (până la prag)
+    else if (isYouthExempt && fiscalRules?.salary?.youth_exemption_enabled !== false) {
+      const youthThreshold = fiscalRules?.salary?.youth_exemption_threshold || 6050;
+      if (valueInRON <= youthThreshold) {
+        // Scutire totală IV pentru tineri sub 26 ani și sub prag
+        const previousTax = calcResult.incomeTax;
+        calcResult.incomeTax = 0;
+        calcResult.net = calcResult.net + previousTax;
+        calcResult.taxExemptReason = `Scutire IV - Tânăr sub 26 ani (venit ≤ ${youthThreshold} RON)`;
+        calcResult.exemptAmount = valueInRON;
+      } else {
+        // Partial scutit - doar partea peste prag este impozitată
+        // (deja calculat în calculateStandard cu youthDeduction)
+        calcResult.taxExemptReason = `Scutire parțială - Tânăr sub 26 ani (venit > ${youthThreshold} RON)`;
+      }
+    }
+    
+    // 3. Dacă NU este funcție de bază, deducerea personală = 0 (deja gestionat în calculator)
+    if (!isBasicFunction) {
+      calcResult.noBasicFunctionNote = 'Deducerea personală nu se aplică (nu este funcție de bază)';
+    }
+
     setResult(calcResult);
     
+    // Actualizare URL pentru SEO (URL dinamic)
+    updateURLParams(valueInRON);
+    
     // Load 2025 for comparison
-    if (year === 2026) {
+    if (selectedYear === 2026 || year === 2026) {
       load2025Comparison(valueInRON, options);
     }
+  };
+  
+  // ============================================
+  // URL DINAMIC - SEO POWER
+  // ============================================
+  const updateURLParams = (grossValue) => {
+    const params = new URLSearchParams();
+    
+    // Parametri principali
+    params.set('brut', Math.round(grossValue).toString());
+    params.set('an', selectedYear.toString());
+    params.set('luna', selectedMonth.toString());
+    
+    // Sector
+    if (sector !== 'standard') {
+      params.set('sector', sector);
+    }
+    
+    // Copii și dependenți
+    if (parseInt(children) > 0) {
+      params.set('copii', children);
+    }
+    if (parseInt(dependents) > 0) {
+      params.set('persoane', dependents);
+    }
+    
+    // Tichete
+    if (parseFloat(mealVouchers) > 0 || parseFloat(mealVoucherValue) > 0) {
+      params.set('tichete', mealVouchers || mealVoucherValue);
+      params.set('zile', voucherDays);
+    }
+    
+    // Facilități avansate
+    if (!isBasicFunction) {
+      params.set('functie_baza', '0');
+    }
+    if (isYouthExempt) {
+      params.set('tanar', '1');
+    }
+    if (isTaxExempt) {
+      params.set('handicap', '1');
+    }
+    
+    // Actualizare URL fără reload
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.replaceState({}, '', newUrl);
   };
 
   const load2025Comparison = async (valueInRON, options) => {
