@@ -716,7 +716,7 @@ function SalaryCalculatorContent() {
                 {/* Main Results */}
                 <Card>
                   <CardHeader>
-                    <CardTitle>Rezultate {year}</CardTitle>
+                    <CardTitle>Rezultate {selectedYear || year}</CardTitle>
                     <CardDescription>
                       {sector === 'it' && 'Sector IT - Scutire impozit până la 10.000 RON'}
                       {sector === 'construction' && 'Sector Construcții - CAS redus 21.25%'}
