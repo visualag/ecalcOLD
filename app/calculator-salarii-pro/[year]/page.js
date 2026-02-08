@@ -1272,7 +1272,7 @@ function SalaryCalculatorContent() {
               </Card>
             )}
           </div>
-        </div>
+            </div>
           </TabsContent>
 
           {/* TAB: ZILE LUCRATOARE */}
