@@ -153,6 +153,217 @@ function SalaryCalculatorContent() {
     // Kept for backwards compatibility
   };
 
+  // Încarcă zilele libere din API sau folosește valorile default
+  const loadHolidays = async () => {
+    try {
+      const targetYear = selectedYear || year;
+      const response = await fetch(`/api/holidays/${targetYear}`);
+      if (response.ok) {
+        const data = await response.json();
+        setHolidays(data.holidays || []);
+      } else {
+        // Folosește datele default dacă API-ul nu are date
+        setHolidays(defaultHolidays[targetYear] || []);
+      }
+    } catch (error) {
+      // Fallback la date default
+      const targetYear = selectedYear || year;
+      setHolidays(defaultHolidays[targetYear] || []);
+    }
+  };
+
+  // Calculează zilele lucratoare când se schimbă anul sau zilele libere
+  useEffect(() => {
+    loadHolidays();
+  }, [selectedYear, year]);
+
+  useEffect(() => {
+    if (holidays.length > 0 || defaultHolidays[selectedYear || year]) {
+      const targetYear = selectedYear || year;
+      const holidaysToUse = holidays.length > 0 ? holidays : (defaultHolidays[targetYear] || []);
+      const data = calculateYearlyWorkingDays(targetYear, holidaysToUse);
+      setYearlyData(data);
+    }
+  }, [holidays, selectedYear, year]);
+
+  // ============================================
+  // PRINT - DOAR REZULTATUL (A4/A5)
+  // ============================================
+  const handlePrintResult = () => {
+    if (!result) {
+      toast.error('Calculați mai întâi salariul pentru a printa');
+      return;
+    }
+
+    // Creează o fereastră nouă pentru printare
+    const printWindow = window.open('', '_blank');
+    const totalTaxes = result.cas + result.cass + result.incomeTax;
+    
+    const printContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Calculator Salariu ${selectedYear || year} - Rezultate</title>
+        <style>
+          @page { size: A4; margin: 15mm; }
+          @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+          }
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 12pt;
+          }
+          .header {
+            text-align: center;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+          }
+          .header h1 { margin: 0; color: #2563eb; font-size: 20pt; }
+          .header p { margin: 5px 0; color: #64748b; font-size: 10pt; }
+          .section { margin-bottom: 20px; }
+          .section-title {
+            font-weight: bold;
+            color: #334155;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+          }
+          .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dotted #e2e8f0;
+          }
+          .row.highlight { background: #f0f9ff; font-weight: bold; }
+          .row .label { color: #475569; }
+          .row .value { font-weight: 600; }
+          .row .value.green { color: #16a34a; }
+          .row .value.red { color: #dc2626; }
+          .row .value.blue { color: #2563eb; }
+          .big-result {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            border-radius: 10px;
+            margin: 20px 0;
+          }
+          .big-result .label { font-size: 12pt; opacity: 0.9; }
+          .big-result .value { font-size: 24pt; font-weight: bold; }
+          .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+            color: #94a3b8;
+            font-size: 9pt;
+          }
+          .tax-exempt { background: #dcfce7; padding: 10px; border-radius: 5px; margin: 10px 0; }
+          .tax-exempt strong { color: #166534; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <h1>📊 Calculator Salariu ${selectedYear || year}</h1>
+          <p>Raport generat pe ${new Date().toLocaleDateString('ro-RO', { dateStyle: 'full' })}</p>
+          <p>Sector: ${sector === 'it' ? 'IT' : sector === 'construction' ? 'Construcții' : sector === 'agriculture' ? 'Agricultură' : 'Standard'}</p>
+        </div>
+
+        <div class="big-result">
+          <div class="label">SALARIU NET</div>
+          <div class="value">${result.net.toFixed(2)} RON</div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">💰 Detalii Calcul</div>
+          <div class="row">
+            <span class="label">Salariu Brut:</span>
+            <span class="value">${result.gross.toFixed(2)} RON</span>
+          </div>
+          ${result.untaxedAmount > 0 ? `
+          <div class="row">
+            <span class="label">Sumă netaxabilă:</span>
+            <span class="value blue">-${result.untaxedAmount.toFixed(2)} RON</span>
+          </div>
+          ` : ''}
+          <div class="row">
+            <span class="label">CAS (${fiscalRules?.salary?.cas_rate || 25}%):</span>
+            <span class="value red">-${result.cas.toFixed(2)} RON</span>
+          </div>
+          <div class="row">
+            <span class="label">CASS (${fiscalRules?.salary?.cass_rate || 10}%):</span>
+            <span class="value red">-${result.cass.toFixed(2)} RON</span>
+          </div>
+          ${result.personalDeduction > 0 ? `
+          <div class="row">
+            <span class="label">Deducere personală:</span>
+            <span class="value green">${result.personalDeduction.toFixed(2)} RON</span>
+          </div>
+          ` : ''}
+          ${result.childDeduction > 0 ? `
+          <div class="row">
+            <span class="label">Deducere copii (${parseInt(children) || 0} pers.):</span>
+            <span class="value green">${result.childDeduction.toFixed(2)} RON</span>
+          </div>
+          ` : ''}
+          <div class="row">
+            <span class="label">Impozit pe Venit (${fiscalRules?.salary?.income_tax_rate || 10}%):</span>
+            <span class="value red">-${result.incomeTax.toFixed(2)} RON</span>
+          </div>
+          ${result.voucherValue > 0 ? `
+          <div class="row">
+            <span class="label">Tichete de masă:</span>
+            <span class="value green">+${result.voucherValue.toFixed(2)} RON</span>
+          </div>
+          ` : ''}
+        </div>
+
+        ${result.taxExemptReason ? `
+        <div class="tax-exempt">
+          <strong>✅ Facilitate fiscală:</strong> ${result.taxExemptReason}
+        </div>
+        ` : ''}
+
+        <div class="section">
+          <div class="section-title">📈 Rezumat</div>
+          <div class="row highlight">
+            <span class="label">Total Taxe Angajat:</span>
+            <span class="value red">${totalTaxes.toFixed(2)} RON</span>
+          </div>
+          <div class="row">
+            <span class="label">CAM (Angajator):</span>
+            <span class="value">${result.cam.toFixed(2)} RON</span>
+          </div>
+          <div class="row highlight">
+            <span class="label">Cost Total Angajator:</span>
+            <span class="value blue">${result.totalCost.toFixed(2)} RON</span>
+          </div>
+        </div>
+
+        <div class="footer">
+          <p>Generat de eCalc.ro - Calculator Salarii Profesional</p>
+          <p>Link: ${window.location.href}</p>
+          <p>Acest document are scop informativ. Pentru calcule oficiale, consultați un specialist.</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    
+    // Așteaptă încărcarea și printează
+    printWindow.onload = () => {
+      printWindow.print();
+    };
+    
+    toast.success('Documentul pentru printare a fost generat');
+  };
+
   const calculate = () => {
     if (!fiscalRules || !inputValue || parseFloat(inputValue) <= 0) {
       toast.error('Introduceți o valoare validă');
