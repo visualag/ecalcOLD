@@ -2,12 +2,16 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
 export const metadata = {
-  title: 'eCalc RO - Calculatoare Fiscale România 2026',
-  description: 'Platformă gratuită pentru calcularea impozitelor, salariilor și alte utilități fiscale pentru România',
-  keywords: 'calculator salariu, impozit auto, e-factura, concediu medical, compensații zbor, randament imobiliar',
+  metadataBase: new URL('https://ecalc.ro'),
+  alternates: {
+    canonical: '/',
+  },
+  title: 'Calculator Salarii 2026 PRO - Brut la Net & PFA vs SRL | eCalc.ro',
+  description: 'Sistem profesional de calcul fiscal 2026. Calculator Salarii Brut/Net, PFA, e-Factura, Impozit Auto și Rentabilitate Imobiliară. Actualizat la zi conform legislației din România.',
+  keywords: 'calculator salariu 2026, brut net 2026, calculator pfa 2026, pfa vs srl, impozit auto 2026, e-factura romania',
 };
 
 export default function RootLayout({ children }) {
