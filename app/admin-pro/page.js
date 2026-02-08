@@ -1541,6 +1541,120 @@ export default function AdminDashboard() {
             </div>
           </TabsContent>
 
+          {/* HOLIDAYS TAB - Administrare Sărbători */}
+          <TabsContent value="holidays" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-red-500" />
+                  Administrare Sărbători Legale {selectedYear}
+                </CardTitle>
+                <CardDescription>
+                  Adaugă, editează sau șterge zilele libere pentru anul {selectedYear}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Formular adăugare */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-lg">
+                  <div>
+                    <Label>Data</Label>
+                    <Input
+                      type="date"
+                      value={newHoliday.date}
+                      onChange={(e) => setNewHoliday({ ...newHoliday, date: e.target.value })}
+                    />
+                  </div>
+                  <div>
+                    <Label>Nume Sărbătoare</Label>
+                    <Input
+                      value={newHoliday.name}
+                      onChange={(e) => setNewHoliday({ ...newHoliday, name: e.target.value })}
+                      placeholder="Ex: Ziua Națională"
+                    />
+                  </div>
+                  <div>
+                    <Label>Tip</Label>
+                    <Select value={newHoliday.type} onValueChange={(v) => setNewHoliday({ ...newHoliday, type: v })}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="legal">Sărbătoare Legală</SelectItem>
+                        <SelectItem value="company">Zi Liberă Companie</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex items-end">
+                    <Button onClick={addHoliday} className="w-full">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Adaugă
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Lista sărbătorilor */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-semibold">Sărbători {selectedYear} ({holidays.length} zile)</h3>
+                    <Button onClick={saveHolidays} disabled={loading}>
+                      <Save className="h-4 w-4 mr-2" />
+                      Salvează Toate
+                    </Button>
+                  </div>
+                  
+                  {holidays.length > 0 ? (
+                    <div className="divide-y">
+                      {holidays.map((holiday, index) => {
+                        const date = new Date(holiday.date);
+                        const formattedDate = date.toLocaleDateString('ro-RO', { 
+                          weekday: 'long', 
+                          day: 'numeric', 
+                          month: 'long' 
+                        });
+                        
+                        return (
+                          <div key={index} className="flex items-center justify-between py-3 hover:bg-slate-50 px-2 rounded">
+                            <div className="flex items-center gap-4">
+                              <div className="bg-red-500 text-white rounded p-2 min-w-[50px] text-center">
+                                <div className="text-lg font-bold">{date.getDate()}</div>
+                                <div className="text-xs uppercase">{date.toLocaleDateString('ro-RO', { month: 'short' })}</div>
+                              </div>
+                              <div>
+                                <div className="font-medium">{holiday.name}</div>
+                                <div className="text-sm text-slate-500">{formattedDate}</div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className={`px-2 py-1 rounded text-xs ${
+                                holiday.type === 'legal' ? 'bg-red-100 text-red-800' : 'bg-orange-100 text-orange-800'
+                              }`}>
+                                {holiday.type === 'legal' ? 'Legal' : 'Companie'}
+                              </span>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={() => removeHoliday(holiday.date)}
+                                className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-slate-500">
+                      <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                      <p>Nu sunt configurate sărbători pentru {selectedYear}</p>
+                      <p className="text-sm">Adăugați prima sărbătoare folosind formularul de mai sus</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* ADS TAB - Keep existing functionality */}
           <TabsContent value="ads">
             <Card>
