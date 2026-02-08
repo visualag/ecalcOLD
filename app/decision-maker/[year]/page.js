@@ -16,7 +16,9 @@ import Footer from '@/components/Footer';
 
 export default function DecisionMakerPage({ params }) {
   const unwrappedParams = useParams();
+  
   const year = parseInt(params?.year) || 2026;
+  if (!params) return null; // Previne randarea pe server fără parametri
   
   const [fiscalRules, setFiscalRules] = useState(null);
   const [fiscalRules2025, setFiscalRules2025] = useState(null);
@@ -50,7 +52,8 @@ export default function DecisionMakerPage({ params }) {
     }
   };
 
-  const calculateSalary = (income, rules) => {
+const calculateSalary = (income, rules) => {
+    if (!rules) return { net: 0, taxes: 0, details: {} }; // Siguranță
     const calculator = new SalaryCalculator(rules);
     const monthlyGross = income / 12;
     const result = calculator.calculateStandard(monthlyGross);
