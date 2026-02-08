@@ -115,7 +115,7 @@ export default function Home() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+              <div className="w-10 h-10 shrink-0 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                 <Calculator className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -203,10 +203,12 @@ export default function Home() {
             </nav>
 
             {/* Mobile Menu Button */}
-            <button
-              className="lg:hidden p-2 rounded-lg hover:bg-slate-800 text-slate-300"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
+            
+<button
+  aria-label="Meniu principal"
+  className="lg:hidden p-2 rounded-lg hover:bg-slate-800 text-slate-300"
+  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+>
               {mobileMenuOpen ? (
                 <X className="h-6 w-6" />
               ) : (
@@ -262,7 +264,7 @@ export default function Home() {
               Profesionale România
             </span>
           </h1>
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-8">
+          <p className="text-xl text-slate-200 max-w-3xl mx-auto mb-8">
             Platforma completă pentru calcule fiscale, comparații forme juridice, 
             simulări credit și analiza drepturilor - conformă cu legislația {currentYear}
           </p>
@@ -299,7 +301,7 @@ export default function Home() {
             {professionalCalculators.map((calc) => {
               const Icon = calc.icon;
               return (
-                <Link key={calc.id} href={calc.href}>
+                <Link key={calc.id} href={calc.href} aria-label={`Deschide ${calc.title}`}>
                   <Card className="bg-slate-800/50 border-slate-700 hover:border-slate-500 hover:bg-slate-800 transition-all duration-300 hover:-translate-y-1 cursor-pointer h-full group">
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between">
@@ -321,7 +323,7 @@ export default function Home() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-slate-400 text-sm">
+                      <p className="text-slate-300 text-sm">
                         {calc.description}
                       </p>
                       <div className="mt-4 flex items-center text-blue-400 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
