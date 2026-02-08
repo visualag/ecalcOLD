@@ -1273,6 +1273,150 @@ function SalaryCalculatorContent() {
             )}
           </div>
         </div>
+          </TabsContent>
+
+          {/* TAB: ZILE LUCRATOARE */}
+          <TabsContent value="zile-lucratoare" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  Zile Lucratoare {selectedYear || year}
+                </CardTitle>
+                <CardDescription>
+                  Calendar cu zilele lucratoare pe fiecare lună
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {yearlyData ? (
+                  <div className="space-y-6">
+                    {/* Summary Cards */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div className="bg-blue-50 rounded-lg p-4 text-center">
+                        <div className="text-3xl font-bold text-blue-600">{yearlyData.totalWorkingDays}</div>
+                        <div className="text-sm text-blue-700">Zile Lucratoare</div>
+                      </div>
+                      <div className="bg-red-50 rounded-lg p-4 text-center">
+                        <div className="text-3xl font-bold text-red-600">{yearlyData.totalHolidays}</div>
+                        <div className="text-sm text-red-700">Sărbători Legale</div>
+                      </div>
+                      <div className="bg-slate-50 rounded-lg p-4 text-center">
+                        <div className="text-3xl font-bold text-slate-600">{yearlyData.totalWeekends}</div>
+                        <div className="text-sm text-slate-700">Zile Weekend</div>
+                      </div>
+                      <div className="bg-green-50 rounded-lg p-4 text-center">
+                        <div className="text-3xl font-bold text-green-600">{yearlyData.totalDays}</div>
+                        <div className="text-sm text-green-700">Total Zile {selectedYear || year}</div>
+                      </div>
+                    </div>
+
+                    {/* Monthly Table */}
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm">
+                        <thead>
+                          <tr className="border-b bg-slate-50">
+                            <th className="py-3 px-4 text-left font-semibold">Luna</th>
+                            <th className="py-3 px-4 text-center font-semibold">Zile Totale</th>
+                            <th className="py-3 px-4 text-center font-semibold text-blue-600">Zile Lucratoare</th>
+                            <th className="py-3 px-4 text-center font-semibold text-slate-600">Weekend</th>
+                            <th className="py-3 px-4 text-center font-semibold text-red-600">Sărbători</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {yearlyData.months.map((month) => (
+                            <tr key={month.month} className="border-b hover:bg-slate-50">
+                              <td className="py-3 px-4 font-medium">{month.name}</td>
+                              <td className="py-3 px-4 text-center">{month.totalDays}</td>
+                              <td className="py-3 px-4 text-center font-bold text-blue-600">{month.workingDays}</td>
+                              <td className="py-3 px-4 text-center text-slate-600">{month.weekendDays}</td>
+                              <td className="py-3 px-4 text-center text-red-600">{month.holidayDays}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                        <tfoot>
+                          <tr className="bg-slate-100 font-bold">
+                            <td className="py-3 px-4">TOTAL {selectedYear || year}</td>
+                            <td className="py-3 px-4 text-center">{yearlyData.totalDays}</td>
+                            <td className="py-3 px-4 text-center text-blue-600">{yearlyData.totalWorkingDays}</td>
+                            <td className="py-3 px-4 text-center text-slate-600">{yearlyData.totalWeekends}</td>
+                            <td className="py-3 px-4 text-center text-red-600">{yearlyData.totalHolidays}</td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-slate-500">
+                    <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>Se încarcă datele...</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* TAB: ZILE LIBERE */}
+          <TabsContent value="zile-libere" className="mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-red-500" />
+                  Sărbători Legale {selectedYear || year}
+                </CardTitle>
+                <CardDescription>
+                  Lista completă a zilelor libere legale din România
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {(holidays.length > 0 || defaultHolidays[selectedYear || year]) ? (
+                  <div className="space-y-4">
+                    <div className="grid gap-3">
+                      {(holidays.length > 0 ? holidays : defaultHolidays[selectedYear || year] || []).map((holiday, index) => {
+                        const date = new Date(holiday.date);
+                        const dayOfWeek = date.toLocaleDateString('ro-RO', { weekday: 'long' });
+                        const formattedDate = date.toLocaleDateString('ro-RO', { day: 'numeric', month: 'long' });
+                        
+                        return (
+                          <div key={index} className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-100 hover:bg-red-100 transition-colors">
+                            <div className="flex items-center gap-4">
+                              <div className="bg-red-500 text-white rounded-lg p-2 min-w-[60px] text-center">
+                                <div className="text-xl font-bold">{date.getDate()}</div>
+                                <div className="text-xs uppercase">{date.toLocaleDateString('ro-RO', { month: 'short' })}</div>
+                              </div>
+                              <div>
+                                <div className="font-semibold text-slate-900">{holiday.name}</div>
+                                <div className="text-sm text-slate-600">{dayOfWeek}, {formattedDate}</div>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                holiday.type === 'legal' ? 'bg-red-500 text-white' : 'bg-orange-500 text-white'
+                              }`}>
+                                {holiday.type === 'legal' ? 'Sărbătoare Legală' : 'Zi Liberă'}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    
+                    <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                      <p className="text-sm text-blue-800">
+                        <strong>💡 Notă:</strong> Zilele libere pot fi administrate din panoul de Admin. 
+                        Dacă o sărbătoare cade în weekend, angajatorul poate decide dacă acordă o zi liberă suplimentară.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-slate-500">
+                    <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>Nu sunt configurate zile libere pentru {selectedYear || year}</p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
       <Footer />
     </div>
