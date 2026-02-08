@@ -801,6 +801,9 @@ export async function PUT(request, { params }) {
     if (path.startsWith('fiscal-rules/')) {
       const year = path.split('/')[1];
       return handleFiscalRulesPut(year, request, db);
+    } else if (path.startsWith('holidays/')) {
+      const year = path.split('/')[1];
+      return handleHolidaysPut(request, db, year);
     } else if (path === 'settings') {
       return handleSettingsPut(request, db);
     }
