@@ -1,19 +1,16 @@
-const currentYear = new Date().getFullYear();
-
 export async function generateMetadata({ params }) {
-  // Luam orasul/statiunea din URL si il facem cu prima litera mare
-  const city = params.city.charAt(0).toUpperCase() + params.city.slice(1);
+    const year = params.year || new Date().getFullYear();
 
-  return {
-    title: `Vremea în ${city} ${currentYear} - Prognoză Meteo și Temperatură`,
-    description: `Află starea vremii în ${city} pentru ${currentYear}. Prognoza detaliată pe ore și zile, temperatura acum și avertizări meteo pentru ${city}.`,
-    keywords: `vremea ${city}, prognoza meteo ${city}, starea vremii ${city} ${currentYear}, temperatura ${city}`,
-    alternates: { 
-      canonical: `/vreme/${params.city}` 
-    }
-  };
+    return {
+        title: `Decision Maker ${year} - PFA vs SRL vs Salariu`,
+        description: `Compară PFA, SRL și Salariu pentru ${year}. Află ce formă de organizare este cea mai avantajoasă.`,
+        keywords: `decision maker ${year}, pfa vs srl ${year}, calculator fiscal ${year}`,
+        alternates: {
+            canonical: `/decision-maker/${year}`
+        }
+    };
 }
 
 export default function Layout({ children }) {
-  return <>{children}</>;
+    return <>{children}</>;
 }
