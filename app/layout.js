@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import NavigationHeader from '@/components/NavigationHeader';
 import Footer from '@/components/Footer';
+import ChatFloat from '@/components/ChatFloat';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
@@ -61,6 +62,7 @@ export default function RootLayout({ children }) {
         <main className="flex-grow">
           {children}
         </main>
+        <ChatFloat />
         <Footer />
         <Toaster />
       </body>
