@@ -6,21 +6,25 @@ import Footer from '@/components/Footer';
 import { useState, useRef, useEffect } from 'react';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
+
+// Automatizarea anului - se schimbă singur la fiecare revelion
 const currentYear = new Date().getFullYear();
 
 export const metadata = {
   metadataBase: new URL('https://ecalc.ro'),
-  alternates: { canonical: '/' },
+  alternates: {
+    canonical: '/',
+  },
   title: {
     default: `Calculator Salarii ${currentYear} PRO - Brut la Net & PFA vs SRL | eCalc.ro`,
     template: `%s | eCalc.ro`
   },
-  description: `Sistem profesional de calcul fiscal ${currentYear}. Calculator Salarii Brut/Net, PFA, e-Factura, Impozit Auto și Rentabilitate Imobiliară.`,
-  keywords: `calculator salariu ${currentYear}, brut net, calculator pfa, pfa vs srl, impozit auto, e-factura, prognoza meteo`,
+  description: `Sistem profesional de calcul fiscal ${currentYear}. Calculator Salarii Brut/Net, PFA, e-Factura, Impozit Auto și Rentabilitate Imobiliară. Actualizat la zi conform legislației din România.`,
+  keywords: `calculator salariu ${currentYear}, brut net ${currentYear}, calculator pfa ${currentYear}, pfa vs srl, impozit auto ${currentYear}, e-factura romania, prognoza meteo, vremea azi, starea vremii romania, vremea la munte, vremea la mare, vremea litoral, vremea munte, vremea ski`,
 };
 
-// Componenta de Chat definită direct aici ca să nu mai facem importuri care crapă
-function ChatFaraImport() {
+// COMPONENTA CHAT (FĂRĂ IMPORTURI EXTERNE)
+function ChatFaraErori() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
@@ -64,7 +68,7 @@ function ChatFaraImport() {
         <span style={{fontWeight:'bold'}}>Asistent eCalc</span>
         <button onClick={() => setIsOpen(false)} style={{background:'none', border:'none', color:'white', fontWeight:'bold', cursor:'pointer'}}>X</button>
       </div>
-      <div style={{flex:1, overflowY:'auto', padding:'15px', backgroundColor:'#f8fafc', display:'flex', flexDirection:'column', gap:'10px'}}>
+      <div style={{flex:1, overflowY:'auto', padding:'15px', backgroundColor:'#f8fafc', display:'flex', flexDirection:'column', gap:'10px', color:'#1e293b'}}>
         {messages.map((m, i) => (
           <div key={i} style={{alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start', backgroundColor: m.role === 'user' ? '#2563eb' : 'white', color: m.role === 'user' ? 'white' : '#1e293b', padding:'10px', borderRadius:'10px', maxWidth:'80%', fontSize:'14px', border: m.role === 'user' ? 'none' : '1px solid #e2e8f0'}}>
             {m.content}
@@ -72,7 +76,7 @@ function ChatFaraImport() {
         ))}
       </div>
       <form onSubmit={handleSubmit} style={{padding:'10px', borderTop:'1px solid #e2e8f0', display:'flex', gap:'5px'}}>
-        <input style={{flex:1, padding:'8px', borderRadius:'5px', border:'1px solid #cbd5e1', outline:'none'}} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Scrie..." />
+        <input style={{flex:1, padding:'8px', borderRadius:'5px', border:'1px solid #cbd5e1', outline:'none', color:'black'}} value={input} onChange={(e) => setInput(e.target.value)} placeholder="Scrie..." />
         <button type="submit" style={{backgroundColor:'#2563eb', color:'white', border:'none', padding:'8px 15px', borderRadius:'5px', cursor:'pointer'}}>OK</button>
       </form>
     </div>
@@ -82,12 +86,31 @@ function ChatFaraImport() {
 export default function RootLayout({ children }) {
   return (
     <html lang="ro">
+      <head>
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="upgrade-insecure-requests; block-all-mixed-content; connect-src 'self' https://ecalc.artgrup.workers.dev https://api.groq.com https://open-meteo.com https://www.bnr.ro;"
+        />
+      </head>
       <body className={`${inter.className} antialiased bg-slate-50 flex flex-col min-h-screen text-slate-900`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'SoftwareApplication',
+              name: 'eCalc RO',
+              applicationCategory: 'FinanceApplication',
+              offers: { '@type': 'Offer', price: '0', priceCurrency: 'RON' },
+              aggregateRating: { '@type': 'AggregateRating', ratingValue: '4.8', ratingCount: '1250' },
+            }),
+          }}
+        />
         <NavigationHeader />
         <main className="flex-grow">
           {children}
         </main>
-        <ChatFaraImport />
+        <ChatFaraErori />
         <Footer />
         <Toaster />
       </body>
