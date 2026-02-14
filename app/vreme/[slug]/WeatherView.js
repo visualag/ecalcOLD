@@ -94,19 +94,32 @@ export default function WeatherView({ weather, nearbyPlaces, ORASE_PRINCIPALE, M
         </div>
 
         {theme === 'blue' ? (
-          /* METEOBLUE DARK THEME */
-          <div className="bg-[#171b28] text-white p-6 rounded-[8px] shadow-xl overflow-x-hidden font-sans">
+          /* METEOBLUE DARK THEME 1:1 REPLICATION */
+          <div className="bg-[#171b28] text-white p-6 rounded-[4px] shadow-2xl overflow-x-hidden font-sans border border-slate-800">
+            {/* Legend / Tooltip info at top */}
+            <div className="flex bg-[#242b3a]/50 p-3 rounded mb-6 text-[10px] text-slate-400 gap-6 items-center border border-slate-800/50">
+              <div className="flex items-center gap-2"><Triangle className="h-2.5 w-2.5 rotate-180 fill-current" /> Direcția și viteza vântului</div>
+              <div className="flex items-center gap-2"><Droplets className="h-2.5 w-2.5 text-blue-400" /> Cantitate de precipitații</div>
+              <div className="flex items-center gap-2"><Sun className="h-2.5 w-2.5 text-yellow-500" /> Ore de soare</div>
+              <div className="flex items-center gap-2">
+                <div className="flex gap-0.5">
+                  {[1, 2, 3, 4].map(n => <div key={n} className="w-2 h-2 rounded-full border border-slate-500"></div>)}
+                </div>
+                Predictibilitate
+              </div>
+            </div>
+
             {/* Header: Title & Current compact */}
-            <div className="flex justify-between items-center mb-8 border-b border-slate-800 pb-6">
+            <div className="flex justify-between items-start mb-8">
               <div>
-                <h1 className="text-4xl font-bold">Vremea</h1>
-                <p className="text-slate-400 text-sm mt-1">Județul {weather.region}, România</p>
-                <div className="flex gap-2 mt-4">
+                <h1 className="text-6xl font-medium tracking-tight">Vremea</h1>
+                <p className="text-slate-400 text-sm mt-1 uppercase tracking-wider font-bold opacity-70">Județul {weather.region}, România, 44.318°N 23.8°E</p>
+                <div className="flex gap-2 mt-6">
                   {['white', 'blue', 'grey'].map((t) => (
                     <button
                       key={t}
                       onClick={() => changeTheme(t)}
-                      className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest border transition-all ${theme === t ? 'bg-blue-600 border-blue-600 text-white' : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-500'
+                      className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest border transition-all ${theme === t ? 'bg-blue-600 border-blue-600 text-white shadow-lg' : 'bg-[#242b3a] border-slate-700 text-slate-500 hover:text-white'
                         }`}
                     >
                       {t}
@@ -114,110 +127,146 @@ export default function WeatherView({ weather, nearbyPlaces, ORASE_PRINCIPALE, M
                   ))}
                 </div>
               </div>
-              <div className="flex items-center gap-6">
-                <Sun className="h-12 w-12 text-yellow-400" />
+              <div className="flex items-center gap-8 bg-[#242b3a]/30 p-4 rounded-xl border border-slate-800/30">
+                <Sun className="h-16 w-16 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.3)]" />
                 <div className="text-right">
-                  <p className="text-5xl font-light">{currentTemp}°C</p>
-                  <p className="text-sm text-slate-400">{weather.current.wind_speed_10m} km/h | {new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })}</p>
+                  <p className="text-7xl font-bold tracking-tighter">{currentTemp}°C</p>
+                  <p className="text-sm font-bold text-slate-400 mt-1 uppercase tracking-widest">{weather.current.wind_speed_10m} km/h | {new Date().toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' })}</p>
                 </div>
               </div>
             </div>
 
             {/* 7-Day Forecast Grid */}
-            <div className="grid grid-cols-7 gap-px bg-slate-800 rounded-lg overflow-hidden border border-slate-800 mb-8">
+            <div className="grid grid-cols-7 gap-1 bg-slate-900 rounded-lg overflow-hidden border border-slate-800 mb-8 p-1">
               {weather.daily.time.slice(0, 7).map((time, i) => {
                 const date = new Date(time);
                 const dayName = date.toLocaleDateString('ro-RO', { weekday: 'short' }).toUpperCase();
                 const dayDate = date.getDate() + '/' + (date.getMonth() + 1);
-                const maxTemp = Math.round(weather.daily.temperature_2m_max[i]);
-                const minTemp = Math.round(weather.daily.temperature_2m_min[i]);
-                const precipProb = weather.daily.precipitation_probability_max[i];
 
                 return (
-                  <div key={time} className="bg-[#242b3a] flex flex-col items-center py-4 px-2 hover:bg-[#2d3548] transition-colors group cursor-pointer relative">
-                    <div className="text-center mb-4">
-                      <p className="text-[11px] font-bold text-slate-300">{dayName}</p>
-                      <p className="text-[10px] text-slate-500">{i === 0 ? 'Astăzi' : i === 1 ? 'Mâine' : dayDate}</p>
+                  <div key={time} className="bg-[#1a1d2d] flex flex-col items-center py-5 px-2 hover:bg-[#242b3a] transition-all group cursor-pointer border border-transparent hover:border-blue-500/30 rounded-md">
+                    <div className="text-center mb-6">
+                      <p className="text-[12px] font-black text-slate-200">{dayName}</p>
+                      <p className="text-[10px] font-bold text-slate-500 mt-0.5">{i === 0 ? 'Astăzi' : i === 1 ? 'Mâine' : dayDate}</p>
                     </div>
 
-                    <div className="h-12 w-12 flex items-center justify-center mb-4">
+                    <div className="h-16 w-16 flex items-center justify-center mb-8 transform group-hover:scale-110 transition-transform">
                       {getWeatherIcon(weather.daily.weather_code[i])}
                     </div>
 
-                    <div className="space-y-1 mb-4 w-full">
-                      <div className="bg-[#4caf50] text-[#1a1d2d] text-center rounded-[4px] py-1 text-xs font-bold shadow-sm">{maxTemp}°C</div>
-                      <div className="bg-[#2e7d32] text-white text-center rounded-[4px] py-1 text-xs font-bold shadow-sm">{minTemp}°C</div>
+                    <div className="space-y-1.5 mb-8 w-full px-1">
+                      <div className="bg-[#4caf50] text-[#171b28] text-center rounded-[4px] py-1.5 text-[14px] font-black shadow-lg">{Math.round(weather.daily.temperature_2m_max[i])}°C</div>
+                      <div className="bg-[#2e7d32] text-white text-center rounded-[4px] py-1.5 text-[14px] font-black shadow-md">{Math.round(weather.daily.temperature_2m_min[i])}°C</div>
                     </div>
 
-                    <div className="text-[10px] text-slate-400 space-y-2 mt-auto w-full border-t border-slate-700/50 pt-3">
-                      <div className="flex items-center justify-center gap-1">
-                        <Triangle className="h-2 w-2 rotate-180 fill-current opacity-50" />
-                        <span>{weather.daily.wind_speed_10m_max[i]} km/h</span>
+                    <div className="text-[11px] text-slate-400 space-y-3 mt-auto w-full px-2">
+                      <div className="flex items-center gap-2 group-hover:text-white transition-colors">
+                        <Triangle className="h-3 w-3 rotate-180 fill-current opacity-40" />
+                        <span className="font-bold">⬅ {weather.daily.wind_speed_10m_max[i]} km/h</span>
                       </div>
-                      <div className="flex items-center justify-center gap-1">
-                        <Droplets className="h-2 w-2 text-blue-400" />
-                        <span>{precipProb}%</span>
+                      <div className="flex items-center gap-2 group-hover:text-blue-400 transition-colors">
+                        <Droplets className="h-3 w-3 text-blue-500" />
+                        <span className="font-bold">{weather.daily.precipitation_probability_max[i] || '-'} mm</span>
                       </div>
-                      <div className="flex items-center justify-center gap-1">
-                        <Sun className="h-2 w-2 text-yellow-500" />
-                        <span>{Math.round(weather.daily.sunshine_duration[i] / 3600)} h</span>
+                      <div className="flex items-center gap-2 group-hover:text-yellow-500 transition-colors">
+                        <Sun className="h-3 w-3 text-yellow-500" />
+                        <span className="font-bold">☀ {Math.round(weather.daily.sunshine_duration[i] / 3600)} h</span>
                       </div>
                     </div>
 
-                    {/* Predictability icons - 4 static circles */}
-                    <div className="flex justify-center gap-1 mt-4 opacity-30">
-                      {[1, 2, 3, 4].map(n => <Activity key={n} className="h-2.5 w-2.5" />)}
+                    {/* Predictability circles - custom bullseye style */}
+                    <div className="flex justify-center gap-1 mt-6">
+                      {[1, 2, 3, 4].map(n => (
+                        <div key={n} className={`w-3 h-3 rounded-full border-2 border-slate-700 relative`}>
+                          <div className="absolute inset-[2px] rounded-full bg-slate-700/50"></div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* Hourly Detail Mock Section */}
-            <div className="bg-[#242b3a] rounded-lg p-6 border border-slate-800">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">Prognoza detaliată</h3>
-                <div className="flex items-center gap-4 text-[10px] font-bold">
-                  <span className="text-blue-500 underline cursor-pointer">3h</span>
-                  <div className="w-8 h-4 bg-blue-600 rounded-full relative"><div className="absolute right-0.5 top-0.5 h-3 w-3 bg-white rounded-full"></div></div>
-                  <span className="text-slate-500">1h</span>
+            {/* Hourly Detail Section - with blue bars */}
+            <div className="bg-[#1a1d2d] rounded-lg p-8 border border-slate-800 shadow-inner">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-md font-black uppercase tracking-widest text-slate-500 flex items-center gap-3">
+                  <Activity className="h-4 w-4" /> Evoluție orară: marți - 3h
+                </h3>
+                <div className="flex items-center bg-[#242b3a] p-1 rounded-full border border-slate-700">
+                  <button className="px-4 py-1 text-[10px] font-black uppercase rounded-full bg-blue-600 text-white transition-all">3h</button>
+                  <button className="px-4 py-1 text-[10px] font-black uppercase rounded-full text-slate-400 hover:text-white transition-all">1h</button>
                 </div>
               </div>
-              <div className="grid grid-cols-8 gap-2">
-                {weather.hourly.time.slice(0, 8).map((time, i) => (
-                  <div key={i} className="flex flex-col items-center gap-3">
-                    <span className="text-[10px] text-slate-500 font-bold">{new Date(time).getHours()}⁰⁰</span>
-                    <div className="scale-75">{getWeatherIcon(weather.hourly.weather_code[i])}</div>
-                    <span className="text-xs font-bold text-green-400 bg-green-900/30 px-2 py-0.5 rounded">{Math.round(weather.hourly.temperature_2m[i])}°</span>
-                    <span className="text-[9px] text-slate-500">{Math.round(weather.hourly.apparent_temperature[i])}°</span>
-                  </div>
-                ))}
+
+              <div className="grid grid-cols-8 gap-4 items-end">
+                {weather.hourly.time.slice(0, 8).map((time, i) => {
+                  const h = new Date(time).getHours();
+                  const cloudCover = weather.hourly.cloud_cover?.[i] || 20;
+                  return (
+                    <div key={i} className="flex flex-col items-center gap-4 w-full group">
+                      <span className="text-[11px] text-slate-500 font-black">{h === 0 ? '24' : h < 10 ? '0' + h : h}⁰⁰</span>
+                      <div className="h-12 w-12 flex items-center justify-center transform group-hover:scale-125 transition-transform">
+                        {getWeatherIcon(weather.hourly.weather_code[i])}
+                      </div>
+                      <div className="w-full bg-[#4caf50] text-[#171b28] text-center rounded-[3px] py-1 text-[12px] font-black">{Math.round(weather.hourly.temperature_2m[i])}°</div>
+                      <span className="text-[10px] text-slate-500 font-bold mb-2">{Math.round(weather.hourly.apparent_temperature[i])}°</span>
+
+                      {/* Blue visualization bars for clouds/precip */}
+                      <div className="w-full space-y-1 mt-2">
+                        <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-blue-600/50 rounded-full" style={{ width: `${cloudCover}%` }}></div>
+                        </div>
+                        <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-blue-400 rounded-full" style={{ width: `${weather.hourly.precipitation_probability?.[i] || 0}%` }}></div>
+                        </div>
+                      </div>
+
+                      <div className="w-8 h-8 rounded-full border border-slate-700 flex items-center justify-center mt-2 opacity-50 group-hover:opacity-100 transition-opacity">
+                        <div className="w-3 h-3 bg-blue-500/20 rounded-full border border-blue-500/50"></div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Bottom Info Bar */}
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 border-t border-slate-800 pt-8">
-              <div className="flex items-center gap-4">
-                <Sunrise className="h-8 w-8 text-orange-400 opacity-60" />
+            {/* Bottom Info Bar - Extended Metadata */}
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="bg-[#1a1d2d] p-4 rounded-lg border border-slate-800 flex items-center gap-4">
+                <div className="p-3 bg-orange-500/10 rounded-xl">
+                  <Sunrise className="h-6 w-6 text-orange-400" />
+                </div>
                 <div>
-                  <p className="text-[9px] font-bold text-slate-500 uppercase">Răsărit / Apus</p>
-                  <p className="text-xs font-bold">{formatTime(weather.daily.sunrise[0])} - {formatTime(weather.daily.sunset[0])}</p>
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Răsărit / Apus</p>
+                  <p className="text-sm font-black">{formatTime(weather.daily.sunrise[0])} / {formatTime(weather.daily.sunset[0])}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="p-2 bg-yellow-500/10 rounded flex items-center justify-center">
+              <div className="bg-[#1a1d2d] p-4 rounded-lg border border-slate-800 flex items-center gap-4">
+                <div className="p-3 bg-yellow-500/10 rounded-xl">
                   <Sun className="h-6 w-6 text-yellow-500" />
                 </div>
                 <div>
-                  <p className="text-[9px] font-bold text-slate-500 uppercase">Index UV</p>
-                  <p className="text-xs font-bold">{weather.daily.uv_index_max[0]} (Moderat)</p>
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Index UV</p>
+                  <p className="text-sm font-black">UV {weather.daily.uv_index_max[0]} (Moderat)</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <Activity className="h-8 w-8 text-blue-500 opacity-60" />
+              <div className="bg-[#1a1d2d] p-4 rounded-lg border border-slate-800 flex items-center gap-4">
+                <div className="p-3 bg-blue-500/10 rounded-xl">
+                  <Moon className="h-6 w-6 text-blue-300" />
+                </div>
                 <div>
-                  <p className="text-[9px] font-bold text-slate-500 uppercase">Presiune</p>
-                  <p className="text-xs font-bold">{Math.round(weather.current.surface_pressure)} hPa</p>
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Faza Lunii</p>
+                  <p className="text-sm font-black">Lună Nouă</p>
+                </div>
+              </div>
+              <div className="bg-[#1a1d2d] p-4 rounded-lg border border-slate-800 flex items-center gap-4">
+                <div className="p-3 bg-slate-500/10 rounded-xl">
+                  <Activity className="h-6 w-6 text-slate-400" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Presiune Bar.</p>
+                  <p className="text-sm font-black">{Math.round(weather.current.surface_pressure)} hPa</p>
                 </div>
               </div>
             </div>
