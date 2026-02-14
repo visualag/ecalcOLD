@@ -38,10 +38,8 @@ export default function WeatherView({ weather, nearbyPlaces, ORASE_PRINCIPALE, M
     <div className="space-y-4">
       {/* Animated Background Definition */}
       <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100;200;300;400;500;600;700;800;900&display=swap');
-        
         .weather-module {
-          font-family: 'Outfit', sans-serif !important;
+          font-family: 'Inter', sans-serif !important;
         }
         @keyframes subtle-drift {
           0% { background-position: 0% 50%; }
@@ -56,7 +54,7 @@ export default function WeatherView({ weather, nearbyPlaces, ORASE_PRINCIPALE, M
           color: #1e293b;
         }
         .temp-display {
-          font-weight: 300;
+          font-weight: 200;
           letter-spacing: -0.05em;
         }
       `}</style>
