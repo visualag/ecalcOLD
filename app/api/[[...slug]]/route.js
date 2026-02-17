@@ -91,8 +91,11 @@ async function handleFiscalRulesGet(year, db) {
         .sort({ effectiveDate: -1 })
         .toArray();
 
+    const url = new URL(request.url);
+    const showHistory = url.searchParams.get('history') === '1';
+
     if (rules.length > 0) {
-        return NextResponse.json(rules);
+        return NextResponse.json(showHistory ? rules : rules[0]);
     }
 
     return NextResponse.json({
